@@ -1,0 +1,1 @@
+const notaFiscalModel = require("../models/notaFiscalModel");

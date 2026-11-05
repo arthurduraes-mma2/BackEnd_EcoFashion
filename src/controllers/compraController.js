@@ -1,0 +1,1 @@
+const compraModel = require("../models/compraModel");
