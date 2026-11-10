@@ -1,4 +1,3 @@
-
 CREATE DATABASE ecoFashion;
 
 USE ecoFashion;

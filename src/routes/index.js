@@ -10,6 +10,9 @@ const vendaRoutes = require("./vendaRoutes");
 const notaFiscalRoutes = require("./notaFiscalRoutes");
 const carrinhoRoutes = require("./carrinhoRoutes");
 
+const categoriasRoutes = require("./categorias");
+const produtoRoutes = require("./produtoRoutes");
+
 router.get("/", (req, res) => {
     res.send("API EcoFashion funcionando!");
 });
@@ -22,5 +25,8 @@ router.use("/compras", compraRoutes);
 router.use("/vendas", vendaRoutes);
 router.use("/notas-fiscais", notaFiscalRoutes);
 router.use("/carrinho", carrinhoRoutes);
+
+router.use("/categorias", categoriasRoutes);
+router.use("/produtos", produtoRoutes);
 
 module.exports = router;
