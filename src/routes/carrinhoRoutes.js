@@ -19,4 +19,3 @@ router.delete("/itens/:id", carrinhoController.removerProduto);
 router.delete("/:id/itens", carrinhoController.limparCarrinho);
 
 module.exports = router;
-
