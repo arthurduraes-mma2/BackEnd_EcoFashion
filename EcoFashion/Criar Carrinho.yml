@@ -1,0 +1,15 @@
+info:
+  name: Criar Carrinho
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: http://localhost:3000/carrinho
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
