@@ -1,4 +1,3 @@
-
 const carrinhoModel = require("../models/carrinhoModel");
 
 async function criarCarrinho(req, res) {
