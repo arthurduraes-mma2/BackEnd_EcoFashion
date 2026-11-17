@@ -4,8 +4,8 @@ info:
   seq: 1
 
 http:
-  method: GET
-  url: http://localhost:3000/clientes
+  method: POST
+  url: http://localhost:3000/cadastros
   auth: inherit
 
 settings:
@@ -13,4 +13,3 @@ settings:
   timeout: 0
   followRedirects: true
   maxRedirects: 5
-​
