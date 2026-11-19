@@ -1,32 +1,4 @@
-CREATE DATABASE ecoFashion;
 
-USE ecoFashion;
-
-CREATE TABLE categorias(
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    nome VARCHAR(100),
-    descricao TEXT
-);
-
-CREATE TABLE clientes(
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    nome VARCHAR(100) NOT NULL,
-    email VARCHAR(150) NOT NULL UNIQUE,
-    senha VARCHAR(250) NOT NULL,
-    cpf VARCHAR(11) NOT NULL UNIQUE,
-    telefone VARCHAR(20),
-    endereco VARCHAR(200)
-);
-
-CREATE TABLE produto(
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    nome VARCHAR(100) NOT NULL,
-    preco DECIMAL(10,2) NOT NULL,
-    estoque INT NOT NULL,
-    descricao TEXT,
-    tamanho VARCHAR(10),
-    cor VARCHAR(30),
-    imagem VARCHAR(500),
     material VARCHAR(100),
     categoria_id INT NOT NULL,
 
