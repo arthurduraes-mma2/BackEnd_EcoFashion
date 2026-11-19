@@ -29,7 +29,7 @@ async function buscarPedidoPorId(req, res) {
 
         if (pedido.length === 0) {
             return res.status(404).json({
-                mensagem: "Pedido não encontrado ou sem produtos."
+                mensagem: "Pedido não encontrado."
             });
         }
 

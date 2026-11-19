@@ -6,7 +6,7 @@ async function listarPedidos() {
             pedidos.id,
             pedidos.data_pedido,
             pedidos.valor_total,
-            pedidos.status,
+            pedidos.STATUS AS status,
             clientes.id AS cliente_id,
             clientes.nome AS cliente_nome,
             clientes.email AS cliente_email
@@ -25,18 +25,20 @@ async function buscarPedidoPorId(id) {
             pedidos.id AS pedido_id,
             pedidos.data_pedido,
             pedidos.valor_total,
-            pedidos.status,
+            pedidos.STATUS AS status,
+            clientes.id AS cliente_id,
             clientes.nome AS cliente_nome,
             produto.id AS produto_id,
             produto.nome AS produto_nome,
+            itens_pedido.id AS item_id,
             itens_pedido.quantidade,
             itens_pedido.preco_unitario
         FROM pedidos
         INNER JOIN clientes
             ON pedidos.cliente_id = clientes.id
-        INNER JOIN itens_pedido
+        LEFT JOIN itens_pedido
             ON pedidos.id = itens_pedido.pedido_id
-        INNER JOIN produto
+        LEFT JOIN produto
             ON itens_pedido.produto_id = produto.id
         WHERE pedidos.id = ?
     `, [id]);

@@ -11,15 +11,45 @@ async function cadastrar(req, res) {
             });
         }
 
+        if (
+            typeof nome !== "string" ||
+            typeof email !== "string" ||
+            typeof senha !== "string" ||
+            typeof cpf !== "string"
+        ) {
+            return res.status(400).json({
+                mensagem: "Os dados enviados são inválidos."
+            });
+        }
+
+        const nomeFormatado = nome.trim();
+        const emailFormatado = email.trim().toLowerCase();
+        const cpfFormatado = cpf.trim();
+
+        if (!nomeFormatado || !emailFormatado || !senha.trim() || !cpfFormatado) {
+            return res.status(400).json({
+                mensagem: "Preencha todos os campos obrigatórios."
+            });
+        }
+
+        if (nomeFormatado.length > 100 ||
+            emailFormatado.length > 150 ||
+            cpfFormatado.length !== 11 ||
+            !/^\d{11}$/.test(cpfFormatado)) {
+            return res.status(400).json({
+                mensagem: "Confira o nome, email e CPF informados."
+            });
+        }
+
         const senhaCriptografada = await bcrypt.hash(senha, 10);
 
         await cadastroModel.cadastrar(
-            nome,
-            email,
+            nomeFormatado,
+            emailFormatado,
             senhaCriptografada,
-            cpf,
-            telefone || null,
-            endereco || null
+            cpfFormatado,
+            telefone ? String(telefone).trim() : null,
+            endereco ? String(endereco).trim() : null
         );
 
         return res.status(201).json({

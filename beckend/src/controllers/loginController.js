@@ -11,7 +11,15 @@ async function realizarLogin(req, res) {
             });
         }
 
-        const cliente = await loginModel.buscarClientePorEmail(email);
+        if (typeof email !== "string" || typeof senha !== "string") {
+            return res.status(400).json({
+                mensagem: "Email e senha inválidos."
+            });
+        }
+
+        const emailFormatado = email.trim().toLowerCase();
+
+        const cliente = await loginModel.buscarClientePorEmail(emailFormatado);
 
         if (!cliente) {
             return res.status(401).json({
@@ -27,7 +35,7 @@ async function realizarLogin(req, res) {
             });
         }
 
-        res.json({
+        return res.status(200).json({
             mensagem: "Login realizado com sucesso!",
             cliente: {
                 id: cliente.id,
@@ -39,7 +47,7 @@ async function realizarLogin(req, res) {
     } catch (erro) {
         console.error(erro);
 
-        res.status(500).json({
+        return res.status(500).json({
             mensagem: "Erro ao realizar login."
         });
     }

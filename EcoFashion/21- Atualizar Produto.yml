@@ -1,0 +1,15 @@
+info:
+  name: 21- Atualizar Produto
+  type: http
+  seq: 1
+
+http:
+  method: PUT
+  url: http://localhost:3000/produtos/3
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

@@ -1,60 +1,61 @@
 const clienteModel = require("../models/clienteModel");
-const bcrypt = require("bcrypt");
 
 async function listarClientes(req, res) {
     try {
         const clientes = await clienteModel.listarClientes();
 
-        res.json(clientes);
+        return res.status(200).json(clientes);
     } catch (erro) {
         console.error(erro);
-        res.status(500).json({
+
+        return res.status(500).json({
             mensagem: "Erro ao consultar clientes."
-        });
-    }
-}
-
-async function cadastrarCliente(req, res) {
-    try {
-        const { nome, email, senha, cpf, telefone, endereco } = req.body;
-
-        if (!nome || !email || !senha || !cpf) {
-            return res.status(400).json({
-                mensagem: "Nome, email, senha e CPF são obrigatórios."
-            });
-        }
-
-        const senhaCriptografada = await bcrypt.hash(senha, 10);
-
-        await clienteModel.cadastrarCliente(
-            nome,
-            email,
-            senhaCriptografada,
-            cpf,
-            telefone,
-            endereco
-        );
-
-        res.status(201).json({
-            mensagem: "Cliente cadastrado com sucesso!"
-        });
-
-    } catch (erro) {
-        console.error(erro);
-        res.status(500).json({
-            mensagem: "Erro ao cadastrar cliente."
         });
     }
 }
 
 async function atualizarCliente(req, res) {
     try {
-        const { id } = req.params;
-        const { nome, email, cpf, telefone, endereco } = req.body;
+        const id = Number(req.params.id);
+        let { nome, email, cpf, telefone, endereco } = req.body;
+
+        if (!Number.isInteger(id) || id <= 0) {
+            return res.status(400).json({
+                mensagem: "ID do cliente inválido."
+            });
+        }
+
+        nome = typeof nome === "string" ? nome.trim() : "";
+        email = typeof email === "string" ? email.trim() : "";
+        cpf = typeof cpf === "string" ? cpf.trim() : "";
 
         if (!nome || !email || !cpf) {
             return res.status(400).json({
                 mensagem: "Nome, email e CPF são obrigatórios."
+            });
+        }
+
+        if (nome.length > 100 || email.length > 150 || cpf.length > 11) {
+            return res.status(400).json({
+                mensagem: "Um ou mais campos ultrapassaram o limite permitido."
+            });
+        }
+
+        if (!email.includes("@")) {
+            return res.status(400).json({
+                mensagem: "Email inválido."
+            });
+        }
+
+        if (telefone && telefone.length > 20) {
+            return res.status(400).json({
+                mensagem: "Telefone ultrapassou o limite de 20 caracteres."
+            });
+        }
+
+        if (endereco && endereco.length > 200) {
+            return res.status(400).json({
+                mensagem: "Endereço ultrapassou o limite de 200 caracteres."
             });
         }
 
@@ -63,23 +64,29 @@ async function atualizarCliente(req, res) {
             nome,
             email,
             cpf,
-            telefone,
-            endereco
+            telefone || null,
+            endereco || null
         );
 
-        if (resultado.affectedRows === 0) {
+        if (!resultado.clienteExiste) {
             return res.status(404).json({
                 mensagem: "Cliente não encontrado."
             });
         }
 
-        res.json({
+        return res.status(200).json({
             mensagem: "Cliente atualizado com sucesso!"
         });
-
     } catch (erro) {
         console.error(erro);
-        res.status(500).json({
+
+        if (erro.code === "ER_DUP_ENTRY") {
+            return res.status(409).json({
+                mensagem: "Email ou CPF já cadastrado."
+            });
+        }
+
+        return res.status(500).json({
             mensagem: "Erro ao atualizar cliente."
         });
     }
@@ -87,7 +94,13 @@ async function atualizarCliente(req, res) {
 
 async function excluirCliente(req, res) {
     try {
-        const { id } = req.params;
+        const id = Number(req.params.id);
+
+        if (!Number.isInteger(id) || id <= 0) {
+            return res.status(400).json({
+                mensagem: "ID do cliente inválido."
+            });
+        }
 
         const resultado = await clienteModel.excluirCliente(id);
 
@@ -97,13 +110,19 @@ async function excluirCliente(req, res) {
             });
         }
 
-        res.json({
+        return res.status(200).json({
             mensagem: "Cliente excluído com sucesso!"
         });
-
     } catch (erro) {
         console.error(erro);
-        res.status(500).json({
+
+        if (erro.code === "ER_ROW_IS_REFERENCED_2") {
+            return res.status(409).json({
+                mensagem: "Não é possível excluir este cliente porque existem registros vinculados a ele."
+            });
+        }
+
+        return res.status(500).json({
             mensagem: "Erro ao excluir cliente."
         });
     }
@@ -111,7 +130,6 @@ async function excluirCliente(req, res) {
 
 module.exports = {
     listarClientes,
-    cadastrarCliente,
     atualizarCliente,
     excluirCliente
 };

@@ -5,11 +5,14 @@ async function buscarClientePorEmail(email) {
 
     try {
         const resultado = await conexao.query(
-            "SELECT * FROM clientes WHERE email = ?",
+            `SELECT id, nome, email, senha
+             FROM clientes
+             WHERE email = ?`,
             [email]
         );
 
         return resultado[0];
+
     } finally {
         conexao.release();
     }

@@ -5,24 +5,8 @@ async function listarClientes() {
 
     try {
         const resultado = await conexao.query(
-            "SELECT * FROM clientes"
-        );
-
-        return resultado;
-    } finally {
-        conexao.release();
-    }
-}
-
-async function cadastrarCliente(nome, email, senha, cpf, telefone, endereco) {
-    const conexao = await pool.getConnection();
-
-    try {
-        const resultado = await conexao.query(
-            `INSERT INTO clientes 
-            (nome, email, senha, cpf, telefone, endereco)
-            VALUES (?, ?, ?, ?, ?, ?)`,
-            [nome, email, senha, cpf, telefone, endereco]
+            `SELECT id, nome, email, cpf, telefone, endereco
+             FROM clientes`
         );
 
         return resultado;
@@ -37,12 +21,20 @@ async function atualizarCliente(id, nome, email, cpf, telefone, endereco) {
     try {
         const resultado = await conexao.query(
             `UPDATE clientes
-            SET nome = ?, email = ?, cpf = ?, telefone = ?, endereco = ?
-            WHERE id = ?`,
+             SET nome = ?, email = ?, cpf = ?, telefone = ?, endereco = ?
+             WHERE id = ?`,
             [nome, email, cpf, telefone, endereco, id]
         );
 
-        return resultado;
+        const clientes = await conexao.query(
+            "SELECT id FROM clientes WHERE id = ?",
+            [id]
+        );
+
+        return {
+            affectedRows: resultado.affectedRows,
+            clienteExiste: clientes.length > 0
+        };
     } finally {
         conexao.release();
     }
@@ -65,7 +57,6 @@ async function excluirCliente(id) {
 
 module.exports = {
     listarClientes,
-    cadastrarCliente,
     atualizarCliente,
     excluirCliente
 };

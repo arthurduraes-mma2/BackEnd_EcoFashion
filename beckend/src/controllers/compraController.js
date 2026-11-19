@@ -1,17 +1,59 @@
-
 const compraModel = require("../models/compraModel");
 
 async function cadastrarCompra(req, res) {
     try {
-        const { cliente_id, itens } = req.body;
+        const { cliente_id, itens } = req.body || {};
 
-        if (!cliente_id || !itens || !Array.isArray(itens) || itens.length === 0) {
+        const clienteId = Number(cliente_id);
+
+        if (!Number.isInteger(clienteId) || clienteId <= 0) {
             return res.status(400).json({
-                mensagem: "Cliente e produtos são obrigatórios."
+                mensagem: "Informe um cliente válido."
             });
         }
 
-        const pedido_id = await compraModel.cadastrarCompra(cliente_id, itens);
+        if (!Array.isArray(itens) || itens.length === 0) {
+            return res.status(400).json({
+                mensagem: "Adicione pelo menos um produto à compra."
+            });
+        }
+
+        const produtos = [];
+        const idsProdutos = new Set();
+
+        for (const item of itens) {
+            const produto_id = Number(item.produto_id);
+            const quantidade = Number(item.quantidade);
+
+            if (
+                !Number.isInteger(produto_id) ||
+                produto_id <= 0 ||
+                !Number.isInteger(quantidade) ||
+                quantidade <= 0
+            ) {
+                return res.status(400).json({
+                    mensagem: "Informe produtos e quantidades válidos."
+                });
+            }
+
+            if (idsProdutos.has(produto_id)) {
+                return res.status(400).json({
+                    mensagem: "Não repita o mesmo produto na compra."
+                });
+            }
+
+            idsProdutos.add(produto_id);
+
+            produtos.push({
+                produto_id,
+                quantidade
+            });
+        }
+
+        const pedido_id = await compraModel.cadastrarCompra(
+            clienteId,
+            produtos
+        );
 
         return res.status(201).json({
             mensagem: "Compra cadastrada com sucesso!",
@@ -19,8 +61,8 @@ async function cadastrarCompra(req, res) {
         });
 
     } catch (erro) {
-        return res.status(500).json({
-            mensagem: erro.message
+        return res.status(erro.statusCode || 500).json({
+            mensagem: erro.message || "Erro ao cadastrar compra."
         });
     }
 }
@@ -33,15 +75,20 @@ async function listarCompras(req, res) {
 
     } catch (erro) {
         return res.status(500).json({
-            mensagem: "Erro ao listar compras.",
-            erro: erro.message
+            mensagem: "Erro ao listar compras."
         });
     }
 }
 
 async function buscarCompraPorId(req, res) {
     try {
-        const { id } = req.params;
+        const id = Number(req.params.id);
+
+        if (!Number.isInteger(id) || id <= 0) {
+            return res.status(400).json({
+                mensagem: "Informe um ID de compra válido."
+            });
+        }
 
         const compra = await compraModel.buscarCompraPorId(id);
 
@@ -55,8 +102,7 @@ async function buscarCompraPorId(req, res) {
 
     } catch (erro) {
         return res.status(500).json({
-            mensagem: "Erro ao buscar compra.",
-            erro: erro.message
+            mensagem: "Erro ao buscar compra."
         });
     }
 }

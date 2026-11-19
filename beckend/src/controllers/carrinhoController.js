@@ -4,27 +4,37 @@ async function criarCarrinho(req, res) {
     try {
         const { cliente_id } = req.body;
 
-        if (!cliente_id) {
+        if (!Number.isInteger(cliente_id) || cliente_id <= 0) {
             return res.status(400).json({
-                mensagem: "O ID do cliente é obrigatório."
+                mensagem: "Informe um ID de cliente válido."
             });
         }
 
         const id = await carrinhoModel.criarCarrinho(cliente_id);
 
-        res.status(201).json({
+        return res.status(201).json({
             mensagem: "Carrinho criado com sucesso!",
             carrinho_id: id
         });
 
     } catch (erro) {
-        res.status(400).json({ mensagem: erro.message });
+        console.error(erro);
+
+        return res.status(erro.statusCode || 500).json({
+            mensagem: erro.message || "Erro ao criar carrinho."
+        });
     }
 }
 
 async function buscarCarrinhoPorCliente(req, res) {
     try {
-        const { cliente_id } = req.params;
+        const cliente_id = Number(req.params.cliente_id);
+
+        if (!Number.isInteger(cliente_id) || cliente_id <= 0) {
+            return res.status(400).json({
+                mensagem: "ID do cliente inválido."
+            });
+        }
 
         const carrinho = await carrinhoModel.buscarCarrinhoPorCliente(cliente_id);
 
@@ -34,16 +44,26 @@ async function buscarCarrinhoPorCliente(req, res) {
             });
         }
 
-        res.json(carrinho);
+        return res.status(200).json(carrinho);
 
     } catch (erro) {
-        res.status(500).json({ mensagem: erro.message });
+        console.error(erro);
+
+        return res.status(500).json({
+            mensagem: "Erro ao buscar carrinho."
+        });
     }
 }
 
 async function buscarCarrinhoPorId(req, res) {
     try {
-        const { id } = req.params;
+        const id = Number(req.params.id);
+
+        if (!Number.isInteger(id) || id <= 0) {
+            return res.status(400).json({
+                mensagem: "ID do carrinho inválido."
+            });
+        }
 
         const carrinho = await carrinhoModel.buscarCarrinhoPorId(id);
 
@@ -53,21 +73,29 @@ async function buscarCarrinhoPorId(req, res) {
             });
         }
 
-        res.json(carrinho);
+        return res.status(200).json(carrinho);
 
     } catch (erro) {
-        res.status(500).json({ mensagem: erro.message });
+        console.error(erro);
+
+        return res.status(500).json({
+            mensagem: "Erro ao buscar carrinho."
+        });
     }
 }
 
 async function adicionarProduto(req, res) {
     try {
-        const { id } = req.params;
+        const id = Number(req.params.id);
         const { produto_id, quantidade } = req.body;
 
-        if (!produto_id || !Number.isInteger(quantidade) || quantidade <= 0) {
+        if (
+            !Number.isInteger(id) || id <= 0 ||
+            !Number.isInteger(produto_id) || produto_id <= 0 ||
+            !Number.isInteger(quantidade) || quantidade <= 0
+        ) {
             return res.status(400).json({
-                mensagem: "Informe um produto e uma quantidade válida."
+                mensagem: "Informe IDs válidos e uma quantidade maior que zero."
             });
         }
 
@@ -77,21 +105,28 @@ async function adicionarProduto(req, res) {
             quantidade
         );
 
-        res.json(resultado);
+        return res.status(200).json(resultado);
 
     } catch (erro) {
-        res.status(400).json({ mensagem: erro.message });
+        console.error(erro);
+
+        return res.status(erro.statusCode || 500).json({
+            mensagem: erro.message || "Erro ao adicionar produto ao carrinho."
+        });
     }
 }
 
 async function atualizarQuantidade(req, res) {
     try {
-        const { id } = req.params;
+        const id = Number(req.params.id);
         const { quantidade } = req.body;
 
-        if (!Number.isInteger(quantidade) || quantidade <= 0) {
+        if (
+            !Number.isInteger(id) || id <= 0 ||
+            !Number.isInteger(quantidade) || quantidade <= 0
+        ) {
             return res.status(400).json({
-                mensagem: "Informe uma quantidade válida."
+                mensagem: "Informe um ID válido e uma quantidade maior que zero."
             });
         }
 
@@ -100,46 +135,70 @@ async function atualizarQuantidade(req, res) {
             quantidade
         );
 
-        res.json(resultado);
+        return res.status(200).json(resultado);
 
     } catch (erro) {
-        res.status(400).json({ mensagem: erro.message });
+        console.error(erro);
+
+        return res.status(erro.statusCode || 500).json({
+            mensagem: erro.message || "Erro ao atualizar quantidade."
+        });
     }
 }
 
 async function removerProduto(req, res) {
     try {
-        const { id } = req.params;
+        const id = Number(req.params.id);
+
+        if (!Number.isInteger(id) || id <= 0) {
+            return res.status(400).json({
+                mensagem: "ID do item inválido."
+            });
+        }
 
         const resultado = await carrinhoModel.removerProduto(id);
 
         if (resultado === 0) {
             return res.status(404).json({
-                mensagem: "Item não encontrado no carrinho."
+                mensagem: "Item não encontrado no carrinho ativo."
             });
         }
 
-        res.json({
+        return res.status(200).json({
             mensagem: "Produto removido do carrinho com sucesso!"
         });
 
     } catch (erro) {
-        res.status(500).json({ mensagem: erro.message });
+        console.error(erro);
+
+        return res.status(500).json({
+            mensagem: "Erro ao remover produto do carrinho."
+        });
     }
 }
 
 async function limparCarrinho(req, res) {
     try {
-        const { id } = req.params;
+        const id = Number(req.params.id);
+
+        if (!Number.isInteger(id) || id <= 0) {
+            return res.status(400).json({
+                mensagem: "ID do carrinho inválido."
+            });
+        }
 
         await carrinhoModel.limparCarrinho(id);
 
-        res.json({
+        return res.status(200).json({
             mensagem: "Carrinho esvaziado com sucesso!"
         });
 
     } catch (erro) {
-        res.status(500).json({ mensagem: erro.message });
+        console.error(erro);
+
+        return res.status(erro.statusCode || 500).json({
+            mensagem: erro.message || "Erro ao esvaziar carrinho."
+        });
     }
 }
 

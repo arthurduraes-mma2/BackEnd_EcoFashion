@@ -1,8 +1,9 @@
-
 const pool = require("../config/db");
 
 async function listarCategorias() {
-    return await pool.query("SELECT * FROM categorias");
+    return await pool.query(
+        "SELECT * FROM categorias ORDER BY id"
+    );
 }
 
 async function buscarCategoria(id) {

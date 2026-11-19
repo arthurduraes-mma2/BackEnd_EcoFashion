@@ -1,0 +1,15 @@
+info:
+  name: 15- Excluir Categoria
+  type: http
+  seq: 1
+
+http:
+  method: DELETE
+  url: http://localhost:3000/categorias/7
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

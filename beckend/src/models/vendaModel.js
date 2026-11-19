@@ -4,7 +4,8 @@ async function finalizarVenda(pedido_id) {
     const resultado = await pool.query(
         `UPDATE pedidos
          SET STATUS = 'Concluído'
-         WHERE id = ? AND STATUS = 'Pendente'`,
+         WHERE id = ?
+         AND STATUS = 'Pendente'`,
         [pedido_id]
     );
 
@@ -13,9 +14,18 @@ async function finalizarVenda(pedido_id) {
 
 async function listarVendas() {
     return await pool.query(
-        `SELECT * FROM pedidos
-         WHERE STATUS = 'Concluído'
-         ORDER BY id DESC`
+        `SELECT
+            pedidos.id,
+            pedidos.data_pedido,
+            pedidos.valor_total,
+            pedidos.STATUS,
+            pedidos.cliente_id,
+            clientes.nome AS cliente_nome
+         FROM pedidos
+         INNER JOIN clientes
+            ON pedidos.cliente_id = clientes.id
+         WHERE pedidos.STATUS = 'Concluído'
+         ORDER BY pedidos.id DESC`
     );
 }
 
@@ -27,13 +37,19 @@ async function buscarVendaPorId(id) {
             pedidos.valor_total,
             pedidos.STATUS,
             pedidos.cliente_id,
+            clientes.nome AS cliente_nome,
             itens_pedido.id AS item_id,
             itens_pedido.produto_id,
+            produto.nome AS produto_nome,
             itens_pedido.quantidade,
             itens_pedido.preco_unitario
          FROM pedidos
+         INNER JOIN clientes
+            ON pedidos.cliente_id = clientes.id
          LEFT JOIN itens_pedido
-         ON pedidos.id = itens_pedido.pedido_id
+            ON pedidos.id = itens_pedido.pedido_id
+         LEFT JOIN produto
+            ON itens_pedido.produto_id = produto.id
          WHERE pedidos.id = ?
          AND pedidos.STATUS = 'Concluído'`,
         [id]

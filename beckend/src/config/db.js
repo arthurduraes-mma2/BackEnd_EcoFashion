@@ -1,3 +1,6 @@
+const dotenv = require('dotenv')
+dotenv.config();
+
 const mariadb = require("mariadb");
 
 const pool = mariadb.createPool({

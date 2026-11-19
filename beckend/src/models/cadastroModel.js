@@ -12,6 +12,7 @@ async function cadastrar(nome, email, senha, cpf, telefone, endereco) {
         );
 
         return resultado;
+
     } finally {
         conexao.release();
     }
