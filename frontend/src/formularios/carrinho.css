@@ -1,0 +1,30 @@
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f6ef;
+    text-align: center;
+    color: #333;
+    padding: 20px;
+}
+
+h1, h2 {
+    color: #355b43;
+}
+
+#itens-carrinho {
+    background-color: white;
+    padding: 20px;
+    margin: 20px auto;
+    max-width: 400px;
+    border-radius: 10px;
+}
+
+a {
+    color: #355b43;
+    text-decoration: none;
+    margin: 10px;
+}
+
+a:hover {
+    text-decoration: underline;
+}
