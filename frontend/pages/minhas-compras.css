@@ -1,0 +1,180 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background-color: #f4f6f4;
+  color: #1b3620;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.navbar {
+  background-color: #163b1f;
+  padding: 16px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 3px solid #eab308;
+}
+
+.logo {
+  color: #eab308;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.nav-links a {
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+
+.nav-links a.ativo {
+  color: #eab308;
+  font-weight: 600;
+}
+
+.btn-sair {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.container {
+  flex: 1;
+  max-width: 850px;
+  width: 100%;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+.cabecalho-pagina {
+  margin-bottom: 24px;
+}
+
+.cabecalho-pagina h1 {
+  color: #163b1f;
+  font-size: 1.8rem;
+  margin-bottom: 6px;
+}
+
+.cabecalho-pagina p {
+  color: #5a6b5d;
+  font-size: 0.95rem;
+}
+
+.lista-compras {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.card-pedido {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  border: 1px solid #e5ebe6;
+}
+
+.pedido-topo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 12px;
+  margin-bottom: 14px;
+  border-bottom: 1px solid #eef2ef;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.pedido-id {
+  font-weight: bold;
+  color: #163b1f;
+  font-size: 1.05rem;
+}
+
+.pedido-data {
+  color: #5a6b5d;
+  font-size: 0.9rem;
+}
+
+.badge-status {
+  background-color: #dcfce7;
+  color: #166534;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.pedido-itens {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.pedido-item-linha {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.95rem;
+  color: #2c3e30;
+}
+
+.pedido-rodape {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 12px;
+  border-top: 1px solid #eef2ef;
+  font-weight: bold;
+  color: #163b1f;
+  font-size: 1.1rem;
+}
+
+.sem-compras {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 40px 24px;
+  text-align: center;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+}
+
+.sem-compras p {
+  color: #5a6b5d;
+  margin-bottom: 18px;
+}
+
+.btn-explorar {
+  display: inline-block;
+  background-color: #eab308;
+  color: #163b1f;
+  text-decoration: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: bold;
+}
+
+.footer {
+  background-color: #163b1f;
+  color: #ffffff;
+  text-align: center;
+  padding: 18px;
+  font-size: 0.9rem;
+}

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EcoFashion | Produtos</title>
+  <link rel="stylesheet" href="../src/style.css" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23163b1f'/><text x='50' y='72' font-size='65' text-anchor='middle' fill='%23eab308' font-family='sans-serif' font-weight='bold'>E</text></svg>" />
+  <style>
+    .grid-produtos {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 24px;
+      margin-top: 20px;
+    }
+
+    .card-produto {
+      flex: 1 1 250px;
+      max-width: 270px;
+      background-color: var(--cor-card);
+      border: 1px solid var(--cor-borda);
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .card-produto:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
+    }
+
+    .card-produto img {
+      width: 100%;
+      height: 220px;
+      object-fit: contain;
+      object-position: center;
+      padding: 12px;
+      background-color: #ffffff;
+      border-bottom: 1px solid #eef2ef;
+    }
+
+    .card-corpo {
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .card-corpo h3 {
+      font-size: 1.1rem;
+      color: var(--cor-escura);
+      margin-bottom: 8px;
+    }
+
+    .card-corpo p {
+      font-size: 0.88rem;
+      color: var(--cor-texto-suave);
+      line-height: 1.4;
+      margin-bottom: 14px;
+      flex: 1;
+    }
+
+    .card-preco {
+      font-size: 1.15rem;
+      font-weight: bold;
+      color: var(--cor-escura);
+      margin-bottom: 14px;
+    }
+
+    .erro-aviso {
+      background-color: #fff3cd;
+      color: #856404;
+      border: 1px solid #ffeeba;
+      padding: 14px 18px;
+      border-radius: 8px;
+      width: 100%;
+    }
+
+    .toast-aviso {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background-color: #163b1f;
+      color: #ffffff;
+      border-left: 5px solid #eab308;
+      padding: 14px 22px;
+      border-radius: 8px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+      font-size: 0.95rem;
+      font-weight: 500;
+      z-index: 9999;
+      opacity: 0;
+      transform: translateY(15px);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    .toast-aviso.mostrar {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+  <header class="navbar">
+    <a href="../index.html" class="logo">🌿 <span>EcoFashion</span></a>
+    <nav class="nav-links">
+      <a href="../index.html">Início</a>
+      <a href="produtos.html" class="ativo">Produtos</a>
+      <a href="carrinho.html">Carrinho (<span id="contador-carrinho">0</span>)</a>
+      <a href="minhas-compras.html">Minhas compras</a>
+      <a href="../formularios/login.html">Entrar</a>
+      <button id="btn-sair" class="btn-sair">Sair</button>
+    </nav>
+  </header>
+
+  <main class="container animacao">
+    <div class="secao-header">
+      <h2>Todos os Nossos Produtos</h2>
+      <p>Explore nosso catálogo completo de moda sustentável.</p>
+    </div>
+
+    <div class="grid-produtos" id="lista-todos-produtos">
+      <p>Carregando produtos...</p>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>© 2026 EcoFashion — Moda sustentável para preservar o planeta.</p>
+  </footer>
+
+  <script>
+    const API_BASE = "http://localhost:3000";
+
+    async function buscarProdutos() {
+      let resposta = await fetch(`${API_BASE}/produtos`);
+      if (resposta.status === 404) {
+        resposta = await fetch(`${API_BASE}/produto`);
+      }
+      if (!resposta.ok) {
+        throw new Error(`Servidor respondeu com status ${resposta.status}`);
+      }
+      return await resposta.json();
+    }
+
+    async function carregarTodosProdutos() {
+      const container = document.getElementById("lista-todos-produtos");
+
+      try {
+        const dados = await buscarProdutos();
+        const produtos = Array.isArray(dados) ? dados : (dados.produtos || dados.data || []);
+
+        container.innerHTML = "";
+
+        if (produtos.length === 0) {
+          container.innerHTML = `
+            <div class="erro-aviso">
+              O servidor conectou com sucesso, mas a tabela <strong>produtos</strong> no MySQL está vazia (0 itens). Rode os comandos <code>INSERT INTO produtos</code> no MySQL Workbench.
+            </div>`;
+          return;
+        }
+
+        produtos.forEach((prod) => {
+          const precoFormatado = Number(prod.preco).toFixed(2).replace(".", ",");
+          const imgUrl = prod.imagem || "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400";
+
+          container.innerHTML += `
+            <div class="card-produto">
+              <img src="${imgUrl}" alt="${prod.nome}">
+              <div class="card-corpo">
+                <h3>${prod.nome}</h3>
+                <p>${prod.descricao || "Produto sustentável de alta qualidade."}</p>
+                <div class="card-preco">R$ ${precoFormatado}</div>
+                <button class="btn-primario" onclick="adicionarAoCarrinho(${prod.id}, '${prod.nome}', ${prod.preco})">
+                  Adicionar ao carrinho
+                </button>
+              </div>
+            </div>
+          `;
+        });
+      } catch (erro) {
+        container.innerHTML = `
+          <div class="erro-aviso">
+            <strong>Falha na conexão com o backend:</strong> ${erro.message}<br>
+            Verifique se o servidor Node.js está rodando no terminal e se a porta é 3000.
+          </div>`;
+      }
+    }
+
+    function adicionarAoCarrinho(id, nome, preco) {
+      let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+      const existente = carrinho.find((item) => item.id === id);
+
+      if (existente) {
+        existente.quantidade += 1;
+      } else {
+        carrinho.push({ id, nome, preco, quantidade: 1 });
+      }
+
+      localStorage.setItem("carrinho", JSON.stringify(carrinho));
+      atualizarContador();
+      mostrarToast(`✓ ${nome} adicionado ao carrinho!`);
+    }
+
+    function mostrarToast(mensagem) {
+      let toast = document.querySelector(".toast-aviso");
+      if (!toast) {
+        toast = document.createElement("div");
+        toast.className = "toast-aviso";
+        document.body.appendChild(toast);
+      }
+      toast.textContent = mensagem;
+      toast.classList.add("mostrar");
+
+      clearTimeout(toast.timer);
+      toast.timer = setTimeout(() => {
+        toast.classList.remove("mostrar");
+      }, 2500);
+    }
+
+    function atualizarContador() {
+      const carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+      const total = carrinho.reduce((acc, item) => acc + item.quantidade, 0);
+      const contador = document.getElementById("contador-carrinho");
+      if (contador) contador.textContent = total;
+    }
+
+    atualizarContador();
+    carregarTodosProdutos();
+  </script>
+</body>
+</html>

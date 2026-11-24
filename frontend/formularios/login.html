@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EcoFashion | Entrar</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23163b1f'/><text x='50' y='72' font-size='65' text-anchor='middle' fill='%23eab308' font-family='sans-serif' font-weight='bold'>E</text></svg>" />
+  <link rel="stylesheet" href="login.css" />
+  <style>
+    .alerta-form {
+      display: none;
+      padding: 12px 14px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      margin-bottom: 16px;
+      text-align: left;
+    }
+    .alerta-form.erro {
+      display: block;
+      background-color: #fef2f2;
+      color: #b91c1c;
+      border: 1px solid #fecaca;
+    }
+    .alerta-form.sucesso {
+      display: block;
+      background-color: #f0fdf4;
+      color: #15803d;
+      border: 1px solid #bbf7d0;
+    }
+  </style>
+</head>
+<body>
+  <header class="navbar">
+    <div class="logo">🌿 EcoFashion</div>
+    <nav class="nav-links">
+      <a href="../index.html">Início</a>
+      <a href="../pages/produtos.html">Produtos</a>
+      <a href="../pages/carrinho.html">Carrinho</a>
+      <a href="../pages/minhas-compras.html">Minhas compras</a>
+      <a href="login.html" class="ativo">Entrar</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <div class="card-login">
+      <h1>Entrar na Conta</h1>
+      <p class="subtitulo">Bem-vindo de volta à moda sustentável.</p>
+
+      <form id="form-login">
+        <div class="campo">
+          <label for="email">E-mail:</label>
+          <input type="email" id="email" name="email" placeholder="Digite seu e-mail" required />
+        </div>
+
+        <div class="campo">
+          <label for="senha">Senha:</label>
+          <input type="password" id="senha" name="senha" placeholder="Digite sua senha" required />
+        </div>
+
+        <div id="mensagem-login" class="alerta-form"></div>
+
+        <button type="submit" class="btn-entrar">Entrar</button>
+      </form>
+
+      <p class="link-cadastro">
+        Ainda não tem conta? <a href="cadastro.html">Cadastre-se aqui</a>
+      </p>
+    </div>
+  </main>
+
+  <footer class="footer">
+    © 2026 EcoFashion — Moda sustentável para preservar o planeta.
+  </footer>
+
+  <script src="login.js"></script>
+</body>
+</html>

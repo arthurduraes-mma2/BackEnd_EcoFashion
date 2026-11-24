@@ -24,7 +24,7 @@ async function cadastrar(req, res) {
 
         const nomeFormatado = nome.trim();
         const emailFormatado = email.trim().toLowerCase();
-        const cpfFormatado = cpf.trim();
+        const cpfFormatado = cpf.replace(/\D/g, "");
 
         if (!nomeFormatado || !emailFormatado || !senha.trim() || !cpfFormatado) {
             return res.status(400).json({
@@ -48,7 +48,7 @@ async function cadastrar(req, res) {
             emailFormatado,
             senhaCriptografada,
             cpfFormatado,
-            telefone ? String(telefone).trim() : null,
+            telefone ? String(telefone).replace(/\D/g, "") : null,
             endereco ? String(endereco).trim() : null
         );
 
@@ -63,10 +63,10 @@ async function cadastrar(req, res) {
             });
         }
 
-        console.error(erro);
+        console.error("ERRO NO CADASTRO:", erro);
 
         return res.status(500).json({
-            mensagem: "Erro ao realizar cadastro."
+            mensagem: `Erro ao realizar cadastro: ${erro.sqlMessage || erro.message}`
         });
     }
 }

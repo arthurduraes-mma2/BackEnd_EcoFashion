@@ -14,7 +14,7 @@ async function cadastrarCompra(req, res) {
 
         if (!Array.isArray(itens) || itens.length === 0) {
             return res.status(400).json({
-                mensagem: "Adicione pelo menos um produto à compra."
+                mensagem: "Adicione pelo menos um produtos à compra."
             });
         }
 
@@ -22,12 +22,12 @@ async function cadastrarCompra(req, res) {
         const idsProdutos = new Set();
 
         for (const item of itens) {
-            const produto_id = Number(item.produto_id);
+            const produtos_id = Number(item.produtos_id);
             const quantidade = Number(item.quantidade);
 
             if (
-                !Number.isInteger(produto_id) ||
-                produto_id <= 0 ||
+                !Number.isInteger(produtos_id) ||
+                produtos_id <= 0 ||
                 !Number.isInteger(quantidade) ||
                 quantidade <= 0
             ) {
@@ -36,16 +36,16 @@ async function cadastrarCompra(req, res) {
                 });
             }
 
-            if (idsProdutos.has(produto_id)) {
+            if (idsProdutos.has(produtos_id)) {
                 return res.status(400).json({
-                    mensagem: "Não repita o mesmo produto na compra."
+                    mensagem: "Não repita o mesmo produtos na compra."
                 });
             }
 
-            idsProdutos.add(produto_id);
+            idsProdutos.add(produtos_id);
 
             produtos.push({
-                produto_id,
+                produtos_id,
                 quantidade
             });
         }

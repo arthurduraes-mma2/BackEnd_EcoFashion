@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EcoFashion | Início</title>
+  <link rel="stylesheet" href="src/style.css" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAxMDAgMTAwJz48cmVjdCB3aWR0aD0nMTAwJyBoZWlnaHQ9JzEwMCcgcng9JzIwJyBmaWxsPScjMTYzYjFmJy8+PHRleHQgeD0nNTAnIHk9JzcyJyBmb250LXNpemU9JzY1JyB0ZXh0LWFuY2hvcj0nbWlkZGxlJyBmaWxsPScjZWFiMzA4JyBmb250LWZhbWlseT0nc2Fucy1zZXJpZicgZm9udC13ZWlnaHQ9J2JvbGQnPkU8L3RleHQ+PC9zdmc+" />
+  <style>
+    .grid-produtos {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 24px;
+      margin-top: 20px;
+    }
+
+    .card-produto {
+      flex: 1 1 250px;
+      max-width: 270px;
+      background-color: #ffffff;
+      border: 1px solid #e5ebe6;
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .card-produto:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
+    }
+
+    .card-produto img {
+      width: 100%;
+      height: 220px;
+      object-fit: contain;
+      object-position: center;
+      padding: 12px;
+      background-color: #ffffff;
+      border-bottom: 1px solid #eef2ef;
+    }
+
+    .card-corpo {
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .card-corpo h3 {
+      font-size: 1.1rem;
+      color: #163b1f;
+      margin-bottom: 8px;
+    }
+
+    .card-corpo p {
+      font-size: 0.88rem;
+      color: #5a6b5d;
+      line-height: 1.4;
+      margin-bottom: 14px;
+      flex: 1;
+    }
+
+    .card-preco {
+      font-size: 1.15rem;
+      font-weight: bold;
+      color: #163b1f;
+      margin-bottom: 14px;
+    }
+
+    .toast-aviso {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background-color: #163b1f;
+      color: #ffffff;
+      border-left: 5px solid #eab308;
+      padding: 14px 22px;
+      border-radius: 8px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+      font-size: 0.95rem;
+      font-weight: 500;
+      z-index: 9999;
+      opacity: 0;
+      transform: translateY(15px);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    .toast-aviso.mostrar {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+  <!-- Cabeçalho -->
+  <header class="navbar">
+    <a href="index.html" class="logo"><span>EcoFashion</span></a>
+    <nav class="nav-links">
+      <a href="index.html" class="ativo">Início</a>
+      <a href="pages/produtos.html">Produtos</a>
+      <a href="pages/carrinho.html">Carrinho (<span id="contador-carrinho">0</span>)</a>
+      <a href="pages/minhas-compras.html">Minhas compras</a>
+      <a href="formularios/login.html">Entrar</a>
+      <button id="btn-sair" class="btn-sair">Sair</button>
+    </nav>
+  </header>
+
+  <main class="animacao">
+    <!-- 1. Hero Banner -->
+    <section class="hero">
+      <div class="hero-conteudo">
+        <span class="hero-tag">MODA CONSCIENTE • SUSTENTABILIDADE • NATUREZA</span>
+        <h1>A moda sustentável está ao <span class="destaque-texto">seu alcance.</span></h1>
+        <p>Descubra roupas ecológicas em algodão orgânico e linho natural feitas para cuidar do planeta e do seu estilo.</p>
+        <div class="hero-botoes">
+          <a href="pages/produtos.html" class="btn-primario">Explorar produtos</a>
+          <a href="#categorias" class="btn-secundario">Ver categorias</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. Carrossel de Destaques -->
+    <section class="secao container">
+      <div class="secao-header">
+        <h2>Destaques da natureza</h2>
+        <p>Conheça as coleções selecionadas para a sua próxima escolha consciente</p>
+      </div>
+
+      <div class="carrossel-wrapper">
+        <div class="carrossel-slide" id="carrossel-slide">
+          <div class="slide-info">
+            <span class="slide-tag">A MODA SUSTENTÁVEL COMEÇA AQUI</span>
+            <h3 id="slide-titulo">Vista o futuro com leveza.</h3>
+            <p id="slide-desc">Peças produzidas com algodão 100% orgânico e baixo impacto ambiental.</p>
+            <a href="pages/produtos.html" class="btn-primario">Ver coleção</a>
+          </div>
+        </div>
+
+        <div class="carrossel-controles">
+          <button id="btn-anterior" class="btn-ctrl">← Anterior</button>
+          <span id="slide-indicador" class="indicador">1 / 3</span>
+          <button id="btn-proximo" class="btn-ctrl">Próximo →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. Explore por Categoria -->
+    <section id="categorias" class="secao container">
+      <div class="secao-header">
+        <h2>Explore por categoria</h2>
+      </div>
+
+      <div class="grid-categorias">
+        <a href="pages/produtos.html" class="card-categoria">
+          <h3>Camisetas & Tops</h3>
+          <p>Peças leves em algodão 100% orgânico certificado sem agrotóxicos.</p>
+        </a>
+
+        <a href="pages/produtos.html" class="card-categoria">
+          <h3>Calças & Alfaiataria</h3>
+          <p>Modelagens confortáveis confeccionadas em linho natural e fibras recicladas.</p>
+        </a>
+
+        <a href="pages/produtos.html" class="card-categoria">
+          <h3>Casacos & Sobreposições</h3>
+          <p>Peças duráveis com tingimento ecológico feitas para todas as estações.</p>
+        </a>
+      </div>
+    </section>
+
+    <!-- 4. Produtos em Destaque (Carregados da API) -->
+    <section class="secao container">
+      <div class="secao-header">
+        <h2>Produtos em destaque</h2>
+      </div>
+
+      <div class="grid-produtos" id="lista-destaques">
+        <!-- Cards injetados pelo src/index.js -->
+      </div>
+
+      <div class="centro-btn">
+        <a href="pages/produtos.html" class="btn-secundario">Ver catálogo completo</a>
+      </div>
+    </section>
+  </main>
+
+  <!-- Rodapé -->
+  <footer class="footer">
+    <p>© 2026 EcoFashion — Moda sustentável para preservar o planeta.</p>
+  </footer>
+
+  <script src="src/index.js"></script>
+  <script>
+    // Corrige caminhos das imagens (../img/ -> img/) e remove a estrela (★) dos preços
+    const containerDestaques = document.getElementById("lista-destaques");
+    if (containerDestaques) {
+      const observador = new MutationObserver(() => {
+        containerDestaques.querySelectorAll("img").forEach((img) => {
+          const srcAtual = img.getAttribute("src");
+          if (srcAtual && srcAtual.startsWith("../img/")) {
+            img.setAttribute("src", srcAtual.replace("../img/", "img/"));
+          }
+        });
+
+        containerDestaques.querySelectorAll(".card-preco").forEach((preco) => {
+          if (preco.textContent.includes("★")) {
+            preco.textContent = preco.textContent.replace("★", "").trim();
+          }
+        });
+      });
+      observador.observe(containerDestaques, { childList: true, subtree: true });
+    }
+  </script>
+</body>
+</html>

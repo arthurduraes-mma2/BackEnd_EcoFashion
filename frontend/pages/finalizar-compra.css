@@ -1,0 +1,37 @@
+.centro {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 20px;
+}
+
+.caixa-pagamento {
+  background-color: var(--cor-branco);
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 450px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.caixa-pagamento h2 {
+  color: var(--cor-escura);
+  text-align: center;
+}
+
+.valor-destaque {
+  font-size: 20px;
+  font-weight: bold;
+  color: var(--cor-principal);
+  text-align: center;
+}
+
+.caixa-pagamento select {
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+}
