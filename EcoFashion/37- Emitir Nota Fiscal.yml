@@ -1,0 +1,21 @@
+info:
+  name: 37- Emitir Nota Fiscal
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: http://localhost:3000/notas-fiscais
+  body:
+    type: json
+    data: |-
+      {
+        "pedido_id": 3
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

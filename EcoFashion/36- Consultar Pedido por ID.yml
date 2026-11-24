@@ -1,0 +1,15 @@
+info:
+  name: 36- Consultar Pedido por ID
+  type: http
+  seq: 1
+
+http:
+  method: GET
+  url: http://localhost:3000/consultas/pedidos/3
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
