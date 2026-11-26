@@ -9,11 +9,11 @@ router.get("/cliente/:cliente_id", carrinhoController.buscarCarrinhoPorCliente);
 
 router.get("/:id", carrinhoController.buscarCarrinhoPorId);
 
-router.post("/:id/itens", carrinhoController.adicionarProduto);
+router.post("/:id/itens", carrinhoController.adicionarProdutos);
 
 router.put("/itens/:id", carrinhoController.atualizarQuantidade);
 
-router.delete("/itens/:id", carrinhoController.removerProduto);
+router.delete("/itens/:id", carrinhoController.removerProdutos);
 
 router.delete("/:id/itens", carrinhoController.limparCarrinho);
 

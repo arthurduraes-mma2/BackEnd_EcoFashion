@@ -39,8 +39,8 @@ async function buscarVendaPorId(id) {
             pedidos.cliente_id,
             clientes.nome AS cliente_nome,
             itens_pedido.id AS item_id,
-            itens_pedido.produto_id,
-            produto.nome AS produto_nome,
+            itens_pedido.produtos_id,
+            produtos.nome AS produtos_nome,
             itens_pedido.quantidade,
             itens_pedido.preco_unitario
          FROM pedidos
@@ -48,8 +48,8 @@ async function buscarVendaPorId(id) {
             ON pedidos.cliente_id = clientes.id
          LEFT JOIN itens_pedido
             ON pedidos.id = itens_pedido.pedido_id
-         LEFT JOIN produto
-            ON itens_pedido.produto_id = produto.id
+         LEFT JOIN produtos
+            ON itens_pedido.produtos_id = produtos.id
          WHERE pedidos.id = ?
          AND pedidos.STATUS = 'Concluído'`,
         [id]

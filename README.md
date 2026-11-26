@@ -102,7 +102,7 @@ O banco foi planejado para armazenar informações de clientes, categorias, prod
 | --------------- | ----------------------------------------------- |
 | clientes        | Armazenar os dados dos clientes                 |
 | categorias      | Organizar os produtos por categorias            |
-| produto         | Armazenar os produtos disponíveis               |
+| produtos        | Armazenar os produtos disponíveis               |
 | carrinhos       | Registrar os carrinhos dos clientes             |
 | itens_carrinhos | Armazenar os produtos adicionados aos carrinhos |
 | pedidos         | Registrar os pedidos realizados                 |

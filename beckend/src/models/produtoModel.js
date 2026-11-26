@@ -2,18 +2,18 @@ const pool = require("../config/db");
 
 async function listarProdutos() {
     return await pool.query(
-        "SELECT * FROM produto ORDER BY id"
+        "SELECT * FROM produtos ORDER BY id"
     );
 }
 
-async function buscarProduto(id) {
+async function buscarProdutos(id) {
     return await pool.query(
-        "SELECT * FROM produto WHERE id = ?",
+        "SELECT * FROM produtos WHERE id = ?",
         [id]
     );
 }
 
-async function cadastrarProduto(
+async function cadastrarProdutos(
     nome,
     preco,
     estoque,
@@ -25,14 +25,14 @@ async function cadastrarProduto(
     categoria_id
 ) {
     return await pool.query(
-        `INSERT INTO produto
+        `INSERT INTO produtos
         (nome, preco, estoque, descricao, tamanho, cor, imagem, material, categoria_id)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [nome, preco, estoque, descricao, tamanho, cor, imagem, material, categoria_id]
     );
 }
 
-async function atualizarProduto(
+async function atualizarProdutos(
     id,
     nome,
     preco,
@@ -45,7 +45,7 @@ async function atualizarProduto(
     categoria_id
 ) {
     return await pool.query(
-        `UPDATE produto SET
+        `UPDATE produtos SET
         nome = ?, preco = ?, estoque = ?, descricao = ?,
         tamanho = ?, cor = ?, imagem = ?, material = ?,
         categoria_id = ?
@@ -54,17 +54,17 @@ async function atualizarProduto(
     );
 }
 
-async function excluirProduto(id) {
+async function excluirProdutos(id) {
     return await pool.query(
-        "DELETE FROM produto WHERE id = ?",
+        "DELETE FROM produtos WHERE id = ?",
         [id]
     );
 }
 
 module.exports = {
     listarProdutos,
-    buscarProduto,
-    cadastrarProduto,
-    atualizarProduto,
-    excluirProduto
+    buscarProdutos,
+    cadastrarProdutos,
+    atualizarProdutos,
+    excluirProdutos
 };

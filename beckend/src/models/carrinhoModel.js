@@ -33,13 +33,13 @@ async function buscarCarrinhoPorCliente(cliente_id) {
             ic.id AS item_id,
             ic.quantidade,
             ic.preco_unitario,
-            p.id AS produto_id,
-            p.nome AS produto,
+            p.id AS produtos_id,
+            p.nome AS produtos,
             p.preco,
             p.estoque
         FROM carrinhos c
         LEFT JOIN itens_carrinhos ic ON c.id = ic.carrinho_id
-        LEFT JOIN produto p ON ic.produto_id = p.id
+        LEFT JOIN produtos p ON ic.produtos_id = p.id
         WHERE c.cliente_id = ? AND c.STATUS = 'ativo'
         ORDER BY ic.id`,
         [cliente_id]
@@ -56,20 +56,20 @@ async function buscarCarrinhoPorId(id) {
             ic.id AS item_id,
             ic.quantidade,
             ic.preco_unitario,
-            p.id AS produto_id,
-            p.nome AS produto,
+            p.id AS produtos_id,
+            p.nome AS produtos,
             p.preco,
             p.estoque
         FROM carrinhos c
         LEFT JOIN itens_carrinhos ic ON c.id = ic.carrinho_id
-        LEFT JOIN produto p ON ic.produto_id = p.id
+        LEFT JOIN produtos p ON ic.produtos_id = p.id
         WHERE c.id = ?
         ORDER BY ic.id`,
         [id]
     );
 }
 
-async function adicionarProduto(carrinho_id, produto_id, quantidade) {
+async function adicionarProdutos(carrinho_id, produtos_id, quantidade) {
     const carrinhos = await pool.query(
         "SELECT id FROM carrinhos WHERE id = ? AND STATUS = 'ativo'",
         [carrinho_id]
@@ -80,12 +80,12 @@ async function adicionarProduto(carrinho_id, produto_id, quantidade) {
     }
 
     const produtos = await pool.query(
-        "SELECT id, preco, estoque FROM produto WHERE id = ?",
-        [produto_id]
+        "SELECT id, preco, estoque FROM produtos WHERE id = ?",
+        [produtos_id]
     );
 
     if (produtos.length === 0) {
-        throw criarErro("Produto não encontrado.", 404);
+        throw criarErro("Produtos não encontrado.", 404);
     }
 
     const produto = produtos[0];
@@ -93,29 +93,29 @@ async function adicionarProduto(carrinho_id, produto_id, quantidade) {
     const itens = await pool.query(
         `SELECT quantidade
         FROM itens_carrinhos
-        WHERE carrinho_id = ? AND produto_id = ?`,
-        [carrinho_id, produto_id]
+        WHERE carrinho_id = ? AND produtos_id = ?`,
+        [carrinho_id, produtos_id]
     );
 
     const quantidadeAtual = itens.length > 0
         ? Number(itens[0].quantidade)
         : 0;
 
-    if (quantidadeAtual + quantidade > Number(produto.estoque)) {
+    if (quantidadeAtual + quantidade > Number(produtos.estoque)) {
         throw criarErro("Quantidade solicitada maior que o estoque disponível.");
     }
 
     await pool.query(
         `INSERT INTO itens_carrinhos
-        (quantidade, preco_unitario, carrinho_id, produto_id)
+        (quantidade, preco_unitario, carrinho_id, produtos_id)
         VALUES (?, ?, ?, ?)
         ON DUPLICATE KEY UPDATE
         quantidade = quantidade + VALUES(quantidade)`,
-        [quantidade, produto.preco, carrinho_id, produto_id]
+        [quantidade, produtos.preco, carrinho_id, produtos_id]
     );
 
     return {
-        mensagem: "Produto adicionado ao carrinho com sucesso!"
+        mensagem: "Produtos adicionado ao carrinho com sucesso!"
     };
 }
 
@@ -126,7 +126,7 @@ async function atualizarQuantidade(id, quantidade) {
             p.estoque,
             c.STATUS
         FROM itens_carrinhos ic
-        INNER JOIN produto p ON ic.produto_id = p.id
+        INNER JOIN produtos p ON ic.produtos_id = p.id
         INNER JOIN carrinhos c ON ic.carrinho_id = c.id
         WHERE ic.id = ?`,
         [id]
@@ -152,7 +152,7 @@ async function atualizarQuantidade(id, quantidade) {
     };
 }
 
-async function removerProduto(id) {
+async function removerProdutos(id) {
     const resultado = await pool.query(
         `DELETE ic FROM itens_carrinhos ic
         INNER JOIN carrinhos c ON ic.carrinho_id = c.id
@@ -183,8 +183,8 @@ module.exports = {
     criarCarrinho,
     buscarCarrinhoPorCliente,
     buscarCarrinhoPorId,
-    adicionarProduto,
+    adicionarProdutos,
     atualizarQuantidade,
-    removerProduto,
+    removerProdutos,
     limparCarrinho
 };

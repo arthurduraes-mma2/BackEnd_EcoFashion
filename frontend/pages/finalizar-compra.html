@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EcoFashion | Finalizar Compra</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #f4f7f5;
+      color: #163020;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Cabeçalho */
+    header {
+      background-color: #163020;
+      padding: 18px 60px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 3px solid #eab308;
+    }
+
+    .logo {
+      color: #eab308;
+      font-size: 24px;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    nav a {
+      color: #ffffff;
+      text-decoration: none;
+      margin-left: 28px;
+      font-size: 15px;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    nav a:hover {
+      color: #eab308;
+    }
+
+    /* Conteúdo Principal */
+    main {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 20px;
+    }
+
+    .checkout-card {
+      background-color: #ffffff;
+      width: 100%;
+      max-width: 480px;
+      padding: 40px 35px;
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+      text-align: center;
+    }
+
+    .checkout-card h1 {
+      font-size: 28px;
+      color: #163020;
+      margin-bottom: 24px;
+    }
+
+    .total-box {
+      background-color: #eef1ef;
+      padding: 18px;
+      border-radius: 10px;
+      font-size: 22px;
+      font-weight: bold;
+      color: #163020;
+      margin-bottom: 20px;
+    }
+
+    .desconto-info {
+      display: none;
+      font-size: 13px;
+      font-weight: 600;
+      color: #15803d;
+      margin-top: 6px;
+    }
+
+    /* Área de Cupom */
+    .cupom-box {
+      background-color: #f8faf9;
+      border: 1px dashed #94a3b8;
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin-bottom: 24px;
+      text-align: left;
+    }
+
+    .cupom-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .cupom-header label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #163020;
+    }
+
+    .badge-primeira {
+      background-color: #fef3c7;
+      color: #92400e;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 20px;
+    }
+
+    .cupom-input-group {
+      display: flex;
+      gap: 8px;
+    }
+
+    .cupom-input-group input {
+      text-transform: uppercase;
+      padding: 10px 12px;
+      font-size: 14px;
+    }
+
+    .btn-aplicar-cupom {
+      background-color: #163020;
+      color: #eab308;
+      border: none;
+      padding: 0 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background-color 0.2s;
+    }
+
+    .btn-aplicar-cupom:hover {
+      background-color: #234932;
+    }
+
+    .feedback-cupom {
+      display: none;
+      font-size: 12px;
+      font-weight: 600;
+      margin-top: 8px;
+    }
+
+    .feedback-cupom.sucesso {
+      color: #15803d;
+    }
+
+    .feedback-cupom.erro {
+      color: #b91c1c;
+    }
+
+    /* Formulário */
+    .form-group {
+      text-align: left;
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #163020;
+    }
+
+    select, input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 15px;
+      color: #1e293b;
+      background-color: #ffffff;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    select:focus, input:focus {
+      border-color: #163020;
+    }
+
+    /* Caixas dinâmicas de pagamento */
+    .box-pagamento {
+      margin-top: 20px;
+      padding: 18px;
+      background-color: #f8faf9;
+      border: 1px solid #dce5df;
+      border-radius: 10px;
+      text-align: left;
+    }
+
+    .box-pagamento p {
+      font-size: 14px;
+      color: #334155;
+      line-height: 1.5;
+    }
+
+    /* PIX Copia e Cola */
+    .copia-cola-group {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .copia-cola-group input {
+      font-size: 12px;
+      background-color: #ffffff;
+      color: #475569;
+    }
+
+    .btn-copiar {
+      background-color: #163020;
+      color: #ffffff;
+      border: none;
+      padding: 0 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background-color 0.2s;
+    }
+
+    .btn-copiar:hover {
+      background-color: #234932;
+    }
+
+    .msg-copiado {
+      display: none;
+      color: #15803d;
+      font-size: 13px;
+      font-weight: 600;
+      margin-top: 8px;
+    }
+
+    /* Cartão */
+    .linha-dupla {
+      display: flex;
+      gap: 12px;
+    }
+
+    .linha-dupla .form-group {
+      flex: 1;
+    }
+
+    /* Mensagem de erro inline */
+    .msg-erro {
+      display: none;
+      margin-top: 14px;
+      padding: 10px 14px;
+      background-color: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #b91c1c;
+      border-radius: 8px;
+      font-size: 14px;
+      text-align: left;
+    }
+
+    /* Botão Finalizar */
+    .btn-confirmar {
+      width: 100%;
+      margin-top: 24px;
+      padding: 14px;
+      background-color: #163020;
+      color: #eab308;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .btn-confirmar:hover {
+      background-color: #234932;
+    }
+
+    /* Tela de Confirmação Integrada no Card */
+    .tela-confirmacao {
+      display: none;
+      animation: fadeIn 0.35s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .check-circulo {
+      width: 68px;
+      height: 68px;
+      margin: 0 auto 18px;
+      background-color: #dcfce7;
+      color: #15803d;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 34px;
+      font-weight: bold;
+    }
+
+    .tela-confirmacao h2 {
+      font-size: 24px;
+      color: #163020;
+      margin-bottom: 8px;
+    }
+
+    .tela-confirmacao .subtitulo {
+      font-size: 15px;
+      color: #475569;
+      margin-bottom: 22px;
+    }
+
+    .resumo-pedido {
+      background-color: #f8faf9;
+      border: 1px solid #dce5df;
+      border-radius: 10px;
+      padding: 16px 18px;
+      text-align: left;
+      margin-bottom: 24px;
+    }
+
+    .resumo-linha {
+      display: flex;
+      justify-content: space-between;
+      padding: 7px 0;
+      font-size: 14px;
+      border-bottom: 1px solid #e2e8f0;
+      gap: 12px;
+    }
+
+    .resumo-linha:last-child {
+      border-bottom: none;
+    }
+
+    .resumo-linha span {
+      color: #64748b;
+      white-space: nowrap;
+    }
+
+    .resumo-linha strong {
+      color: #163020;
+      text-align: right;
+    }
+
+    .btn-secundario {
+      display: block;
+      width: 100%;
+      margin-top: 10px;
+      padding: 12px;
+      background-color: transparent;
+      color: #163020;
+      border: 1.5px solid #163020;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background-color 0.2s;
+    }
+
+    .btn-secundario:hover {
+      background-color: #eef1ef;
+    }
+
+    @media (max-width: 600px) {
+      header {
+        padding: 16px 20px;
+        flex-direction: column;
+        gap: 12px;
+      }
+      nav a {
+        margin: 0 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Cabeçalho -->
+  <header>
+    <a href="../index.html" class="logo">EcoFashion</a>
+    <nav>
+      <a href="../index.html">Início</a>
+      <a href="produtos.html">Produtos</a>
+      <a href="carrinho.html">Voltar ao Carrinho</a>
+      <a href="minhas-compras.html">Minhas compras</a>
+    </nav>
+  </header>
+
+  <!-- Card Central -->
+  <main>
+    <div class="checkout-card">
+
+      <!-- ETAPA 1: FORMULÁRIO DE PAGAMENTO -->
+      <div id="etapa-pagamento">
+        <h1>Finalizar Pedido</h1>
+
+        <div class="total-box">
+          Total a pagar: <span id="valor-total">R$ 0,00</span>
+          <div id="desconto-info" class="desconto-info"></div>
+        </div>
+
+        <!-- ÁREA DE CUPOM (EXCLUSIVO PRIMEIRA COMPRA) -->
+        <div class="cupom-box">
+          <div class="cupom-header">
+            <label for="input-cupom">Cupom de desconto</label>
+            <span class="badge-primeira">Válido apenas na 1ª compra</span>
+          </div>
+          <div class="cupom-input-group">
+            <input type="text" id="input-cupom" placeholder="Ex: PRIMEIRA10" />
+            <button type="button" id="btn-aplicar-cupom" class="btn-aplicar-cupom">Aplicar</button>
+          </div>
+          <div id="feedback-cupom" class="feedback-cupom"></div>
+        </div>
+
+        <form id="form-pagamento">
+          <div class="form-group">
+            <label for="forma-pagamento">Escolha a forma de pagamento:</label>
+            <select id="forma-pagamento" name="forma-pagamento">
+              <option value="pix">PIX (Aprovação na hora)</option>
+              <option value="credito">Cartão de Crédito</option>
+              <option value="debito">Cartão de Débito</option>
+              <option value="boleto">Boleto Bancário</option>
+            </select>
+          </div>
+
+          <!-- OPÇÃO 1: PIX -->
+          <div id="area-pix" class="box-pagamento">
+            <p>Copie o código PIX abaixo e cole no aplicativo do seu banco para pagar:</p>
+            <div class="copia-cola-group">
+              <input type="text" id="codigo-pix" readonly />
+              <button type="button" id="btn-copiar-pix" class="btn-copiar">Copiar</button>
+            </div>
+            <span id="msg-pix" class="msg-copiado">Código PIX copiado com sucesso!</span>
+          </div>
+
+          <!-- OPÇÃO 2 E 3: CARTÃO (CRÉDITO / DÉBITO) -->
+          <div id="area-cartao" class="box-pagamento" style="display: none;">
+            <div class="form-group">
+              <label for="num-cartao">Número do Cartão:</label>
+              <input type="text" id="num-cartao" placeholder="0000 0000 0000 0000" maxlength="19" />
+            </div>
+
+            <div class="form-group">
+              <label for="nome-cartao">Nome impresso no cartão:</label>
+              <input type="text" id="nome-cartao" placeholder="Ex: MARIA SILVA" />
+            </div>
+
+            <div class="linha-dupla">
+              <div class="form-group">
+                <label for="validade-cartao">Validade:</label>
+                <input type="text" id="validade-cartao" placeholder="MM/AA" maxlength="5" />
+              </div>
+              <div class="form-group">
+                <label for="cvv-cartao">CVV:</label>
+                <input type="text" id="cvv-cartao" placeholder="123" maxlength="4" />
+              </div>
+            </div>
+
+            <!-- Parcelamento (apenas para Crédito) -->
+            <div class="form-group" id="campo-parcelas">
+              <label for="parcelas">Parcelamento:</label>
+              <select id="parcelas"></select>
+            </div>
+          </div>
+
+          <!-- OPÇÃO 4: BOLETO -->
+          <div id="area-boleto" class="box-pagamento" style="display: none;">
+            <p>O boleto bancário será gerado após a confirmação do pedido e terá vencimento em <strong>3 dias úteis</strong>.</p>
+          </div>
+
+          <!-- Aviso de erro de validação -->
+          <div id="msg-erro" class="msg-erro"></div>
+
+          <button type="submit" class="btn-confirmar">Confirmar Pagamento</button>
+        </form>
+      </div>
+
+      <!-- ETAPA 2: CONFIRMAÇÃO INTEGRADA NO CARD -->
+      <div id="etapa-confirmacao" class="tela-confirmacao">
+        <div class="check-circulo">✓</div>
+        <h2>Pedido Confirmado!</h2>
+        <p class="subtitulo">Obrigado por comprar na <strong>EcoFashion</strong>.</p>
+
+        <div class="resumo-pedido">
+          <div class="resumo-linha">
+            <span>Número do Pedido:</span>
+            <strong id="resumo-id">#000000</strong>
+          </div>
+          <div class="resumo-linha">
+            <span>Forma de Pagamento:</span>
+            <strong id="resumo-forma">-</strong>
+          </div>
+          <div class="resumo-linha">
+            <span>Valor Total:</span>
+            <strong id="resumo-valor">R$ 0,00</strong>
+          </div>
+          <div class="resumo-linha">
+            <span>Entrega:</span>
+            <strong id="resumo-endereco">Endereço cadastrado</strong>
+          </div>
+          <div class="resumo-linha">
+            <span>Status:</span>
+            <strong id="resumo-status">-</strong>
+          </div>
+        </div>
+
+        <a href="minhas-compras.html" class="btn-confirmar" style="display: block; text-decoration: none;">Acompanhar em Minhas Compras</a>
+        <a href="produtos.html" class="btn-secundario">Continuar Comprando</a>
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // 1. Lê os itens reais salvos no carrinho e calcula o total
+      const carrinhoAtual = JSON.parse(localStorage.getItem('carrinho')) || [];
+      let valorOriginal = carrinhoAtual.reduce((soma, item) => {
+        return soma + (Number(item.preco) * Number(item.quantidade));
+      }, 0);
+
+      if (valorOriginal === 0) {
+        const totalSalvo = localStorage.getItem('totalCarrinho');
+        if (totalSalvo && !isNaN(parseFloat(totalSalvo))) {
+          valorOriginal = parseFloat(totalSalvo);
+        }
+      }
+
+      let totalPedido = valorOriginal;
+      let cupomAplicado = null;
+
+      const valorTotalEl = document.getElementById('valor-total');
+      const selectPagamento = document.getElementById('forma-pagamento');
+      const areaPix = document.getElementById('area-pix');
+      const areaCartao = document.getElementById('area-cartao');
+      const areaBoleto = document.getElementById('area-boleto');
+      const campoParcelas = document.getElementById('campo-parcelas');
+      const selectParcelas = document.getElementById('parcelas');
+      const msgErro = document.getElementById('msg-erro');
+
+      function formatarMoeda(valor) {
+        return valor.toLocaleString('pt-BR', {
+          style: 'currency',
+          currency: 'BRL'
+        });
+      }
+
+      function atualizarParcelas() {
+        selectParcelas.innerHTML = '';
+        for (let i = 1; i <= 6; i++) {
+          const valorParcela = formatarMoeda(totalPedido / i);
+          const option = document.createElement('option');
+          option.value = i;
+          option.textContent = `${i}x de ${valorParcela} (sem juros)`;
+          selectParcelas.appendChild(option);
+        }
+      }
+
+      function gerarCodigoPix() {
+        const chaveAleatoria = Math.random().toString(36).substring(2, 14).toUpperCase();
+        const valorNumerico = totalPedido.toFixed(2);
+        const payload = `00020126580014BR.GOV.BCB.PIX0136ECOFASHION-${chaveAleatoria}5204000053039865406${valorNumerico}5802BR5910ECOFASHION6009SAO PAULO62070503***6304`;
+        document.getElementById('codigo-pix').value = payload;
+      }
+
+      function atualizarExibicaoTotal() {
+        valorTotalEl.textContent = formatarMoeda(totalPedido);
+        gerarCodigoPix();
+        atualizarParcelas();
+      }
+
+      function atualizarFormaPagamento() {
+        const tipo = selectPagamento.value;
+        msgErro.style.display = 'none';
+
+        areaPix.style.display = 'none';
+        areaCartao.style.display = 'none';
+        areaBoleto.style.display = 'none';
+
+        if (tipo === 'pix') {
+          gerarCodigoPix();
+          areaPix.style.display = 'block';
+        } else if (tipo === 'credito') {
+          atualizarParcelas();
+          areaCartao.style.display = 'block';
+          campoParcelas.style.display = 'block';
+        } else if (tipo === 'debito') {
+          areaCartao.style.display = 'block';
+          campoParcelas.style.display = 'none';
+        } else if (tipo === 'boleto') {
+          areaBoleto.style.display = 'block';
+        }
+      }
+
+      selectPagamento.addEventListener('change', atualizarFormaPagamento);
+
+      // Aplicar cupom de primeira compra
+      document.getElementById('btn-aplicar-cupom').addEventListener('click', function () {
+        const input = document.getElementById('input-cupom');
+        const feedback = document.getElementById('feedback-cupom');
+        const descontoInfo = document.getElementById('desconto-info');
+        const codigo = input.value.trim().toUpperCase();
+
+        feedback.style.display = 'block';
+
+        if (!codigo) {
+          feedback.className = 'feedback-cupom erro';
+          feedback.textContent = 'Digite um código de cupom.';
+          return;
+        }
+
+        if (cupomAplicado) {
+          feedback.className = 'feedback-cupom erro';
+          feedback.textContent = `O cupom ${cupomAplicado} já está aplicado neste pedido.`;
+          return;
+        }
+
+        const usuarioSalvo = localStorage.getItem('usuarioEcoFashion');
+        const usuario = usuarioSalvo ? JSON.parse(usuarioSalvo) : null;
+        const todasCompras = JSON.parse(localStorage.getItem('compras')) || [];
+        const comprasDoUsuario = usuario
+          ? todasCompras.filter(p => p.usuarioEmail === usuario.email)
+          : todasCompras;
+
+        if (comprasDoUsuario.length > 0) {
+          feedback.className = 'feedback-cupom erro';
+          feedback.textContent = 'Cupom indisponível: válido apenas para a sua primeira compra.';
+          return;
+        }
+
+        if (codigo === 'PRIMEIRA10' || codigo === 'ECO10') {
+          const valorDesconto = valorOriginal * 0.10;
+          totalPedido = valorOriginal - valorDesconto;
+          cupomAplicado = codigo;
+
+          feedback.className = 'feedback-cupom sucesso';
+          feedback.textContent = `Cupom ${codigo} aplicado! Você ganhou 10% de desconto (${formatarMoeda(valorDesconto)}).`;
+
+          descontoInfo.textContent = `Desconto de 1ª compra aplicado (-${formatarMoeda(valorDesconto)})`;
+          descontoInfo.style.display = 'block';
+
+          input.disabled = true;
+          this.disabled = true;
+          this.style.opacity = '0.6';
+
+          atualizarExibicaoTotal();
+        } else {
+          feedback.className = 'feedback-cupom erro';
+          feedback.textContent = 'Cupom inválido. Use PRIMEIRA10 na sua 1ª compra.';
+        }
+      });
+
+      // Copiar código PIX
+      document.getElementById('btn-copiar-pix').addEventListener('click', function () {
+        const input = document.getElementById('codigo-pix');
+        input.select();
+        input.setSelectionRange(0, 99999);
+        navigator.clipboard.writeText(input.value);
+
+        const msg = document.getElementById('msg-pix');
+        msg.style.display = 'block';
+        setTimeout(() => {
+          msg.style.display = 'none';
+        }, 3000);
+      });
+
+      // Máscaras do cartão
+      document.getElementById('num-cartao').addEventListener('input', function (e) {
+        let v = e.target.value.replace(/\D/g, '');
+        v = v.replace(/(\d{4})(?=\d)/g, '$1 ');
+        e.target.value = v;
+      });
+
+      document.getElementById('validade-cartao').addEventListener('input', function (e) {
+        let v = e.target.value.replace(/\D/g, '');
+        if (v.length >= 3) {
+          v = v.slice(0, 2) + '/' + v.slice(2, 4);
+        }
+        e.target.value = v;
+      });
+
+      document.getElementById('cvv-cartao').addEventListener('input', function (e) {
+        e.target.value = e.target.value.replace(/\D/g, '');
+      });
+
+      // Envio do formulário
+      document.getElementById('form-pagamento').addEventListener('submit', function (e) {
+        e.preventDefault();
+        msgErro.style.display = 'none';
+        const forma = selectPagamento.value;
+
+        if (carrinhoAtual.length === 0 && valorOriginal === 0) {
+          msgErro.textContent = 'Seu carrinho está vazio.';
+          msgErro.style.display = 'block';
+          return;
+        }
+
+        if (forma === 'credito' || forma === 'debito') {
+          const num = document.getElementById('num-cartao').value.replace(/\s/g, '');
+          const nome = document.getElementById('nome-cartao').value.trim();
+          const validade = document.getElementById('validade-cartao').value.trim();
+          const cvv = document.getElementById('cvv-cartao').value.trim();
+
+          if (num.length < 16 || !nome || validade.length < 5 || cvv.length < 3) {
+            msgErro.textContent = 'Por favor, preencha corretamente todos os dados do cartão.';
+            msgErro.style.display = 'block';
+            return;
+          }
+        }
+
+        const nomesForma = {
+          pix: 'PIX',
+          credito: 'Cartão de Crédito',
+          debito: 'Cartão de Débito',
+          boleto: 'Boleto Bancário'
+        };
+
+        const numeroPedido = Math.floor(100000 + Math.random() * 900000);
+        const statusPedido = forma === 'boleto' ? 'Aguardando pagamento' : 'Aprovado';
+
+        const usuarioSalvo = localStorage.getItem('usuarioEcoFashion');
+        const usuario = usuarioSalvo ? JSON.parse(usuarioSalvo) : null;
+
+        // Busca o endereço salvo no cadastro do usuário logado
+        const enderecosSalvos = JSON.parse(localStorage.getItem('enderecosEcoFashion')) || {};
+        const enderecoEntrega = (usuario && usuario.email)
+          ? (enderecosSalvos[usuario.email.toLowerCase()] || null)
+          : null;
+
+        // Salva na chave 'compras' com o endereço vinculado
+        const comprasExistentes = JSON.parse(localStorage.getItem('compras')) || [];
+        comprasExistentes.unshift({
+          id: numeroPedido,
+          usuarioEmail: usuario ? usuario.email : 'visitante',
+          data: new Date().toLocaleDateString('pt-BR'),
+          total: totalPedido,
+          cupom: cupomAplicado,
+          pagamento: nomesForma[forma],
+          status: statusPedido,
+          endereco: enderecoEntrega,
+          itens: carrinhoAtual
+        });
+        localStorage.setItem('compras', JSON.stringify(comprasExistentes));
+
+        // Limpa o carrinho após finalizar a compra
+        localStorage.removeItem('carrinho');
+        localStorage.removeItem('totalCarrinho');
+
+        document.getElementById('resumo-id').textContent = '#' + numeroPedido;
+        document.getElementById('resumo-forma').textContent = nomesForma[forma];
+        document.getElementById('resumo-valor').textContent = formatarMoeda(totalPedido);
+        document.getElementById('resumo-status').textContent = statusPedido;
+
+        if (enderecoEntrega && enderecoEntrega.rua) {
+          document.getElementById('resumo-endereco').textContent = `${enderecoEntrega.rua}, ${enderecoEntrega.numero} - ${enderecoEntrega.cidade}/${enderecoEntrega.estado}`;
+        } else {
+          document.getElementById('resumo-endereco').textContent = 'Não informado no cadastro';
+        }
+
+        document.getElementById('etapa-pagamento').style.display = 'none';
+        document.getElementById('etapa-confirmacao').style.display = 'block';
+      });
+
+      // Inicializa os valores e a área visível
+      atualizarExibicaoTotal();
+      atualizarFormaPagamento();
+    });
+  </script>
+
+</body>
+</html>

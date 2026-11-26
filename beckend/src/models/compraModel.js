@@ -28,37 +28,37 @@ async function cadastrarCompra(cliente_id, itens) {
         const produtos = [];
 
         for (const item of itens) {
-            // Bloqueia a linha do produto durante a transação.
+            // Bloqueia a linha do produtos durante a transação.
             const resultado = await conexao.query(
                 `SELECT id, preco, estoque
-                 FROM produto
+                 FROM produtos
                  WHERE id = ?
                  FOR UPDATE`,
-                [item.produto_id]
+                [item.produtos_id]
             );
 
             if (resultado.length === 0) {
                 throw criarErro(
-                    `Produto ${item.produto_id} não encontrado.`,
+                    `Produtos ${item.produtos_id} não encontrado.`,
                     404
                 );
             }
 
-            const produto = resultado[0];
+            const produtos = resultado[0];
 
-            if (produto.estoque < item.quantidade) {
+            if (produtos.estoque < item.quantidade) {
                 throw criarErro(
-                    `Estoque insuficiente para o produto ${item.produto_id}.`,
+                    `Estoque insuficiente para o produtos ${item.produtos_id}.`,
                     400
                 );
             }
 
-            const preco_unitario = Number(produto.preco);
+            const preco_unitario = Number(produtos.preco);
 
             valor_total += preco_unitario * item.quantidade;
 
             produtos.push({
-                produto_id: item.produto_id,
+                produtos_id: item.produtos_id,
                 quantidade: item.quantidade,
                 preco_unitario
             });
@@ -80,23 +80,23 @@ async function cadastrarCompra(cliente_id, itens) {
         for (const item of produtos) {
             await conexao.query(
                 `INSERT INTO itens_pedido
-                 (quantidade, preco_unitario, pedido_id, produto_id)
+                 (quantidade, preco_unitario, pedido_id, produtos_id)
                  VALUES (?, ?, ?, ?)`,
                 [
                     item.quantidade,
                     item.preco_unitario,
                     pedido_id,
-                    item.produto_id
+                    item.produtos_id
                 ]
             );
 
             await conexao.query(
-                `UPDATE produto
+                `UPDATE produtos
                  SET estoque = estoque - ?
                  WHERE id = ? AND estoque >= ?`,
                 [
                     item.quantidade,
-                    item.produto_id,
+                    item.produtos_id,
                     item.quantidade
                 ]
             );
@@ -134,16 +134,18 @@ async function buscarCompraPorId(id) {
             pedidos.valor_total,
             pedidos.STATUS,
             pedidos.cliente_id,
-            itens_pedido.id AS item_id,
-            itens_pedido.produto_id,
-            produto.nome AS produto_nome,
+            itens_pedidos
+            .id AS item_id,
+            itens_pedidos
+            .produtos_id,
+            produtos.nome AS produtos_nome,
             itens_pedido.quantidade,
             itens_pedido.preco_unitario
          FROM pedidos
          LEFT JOIN itens_pedido
             ON pedidos.id = itens_pedido.pedido_id
-         LEFT JOIN produto
-            ON itens_pedido.produto_id = produto.id
+         LEFT JOIN produtos
+            ON itens_pedido.produtos_id = produtos.id
          WHERE pedidos.id = ?`,
         [id]
     );

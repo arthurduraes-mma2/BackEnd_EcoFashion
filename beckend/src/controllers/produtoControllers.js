@@ -1,8 +1,8 @@
-const produtoModel = require("../models/produtoModel");
+const produtosModel = require("../models/produtoModel");
 
 async function listarProdutos(req, res) {
     try {
-        const produtos = await produtoModel.listarProdutos();
+        const produtos = await produtosModel.listarProdutos();
 
         return res.status(200).json(produtos);
     } catch (erro) {
@@ -13,7 +13,7 @@ async function listarProdutos(req, res) {
     }
 }
 
-async function buscarProduto(req, res) {
+async function buscarProdutos(req, res) {
     try {
         const id = Number(req.params.id);
 
@@ -23,7 +23,7 @@ async function buscarProduto(req, res) {
             });
         }
 
-        const resultado = await produtoModel.buscarProduto(id);
+        const resultado = await produtosModel.buscarProdutos(id);
 
         if (resultado.length === 0) {
             return res.status(404).json({
@@ -40,7 +40,7 @@ async function buscarProduto(req, res) {
     }
 }
 
-async function cadastrarProduto(req, res) {
+async function cadastrarProdutos(req, res) {
     try {
         const {
             nome,
@@ -116,7 +116,7 @@ async function cadastrarProduto(req, res) {
             });
         }
 
-        await produtoModel.cadastrarProduto(
+        await produtosModel.cadastrarProdutos(
             nome.trim(),
             Number(preco),
             Number(estoque),
@@ -146,7 +146,7 @@ async function cadastrarProduto(req, res) {
     }
 }
 
-async function atualizarProduto(req, res) {
+async function atualizarProdutos(req, res) {
     try {
         const id = Number(req.params.id);
 
@@ -230,15 +230,15 @@ async function atualizarProduto(req, res) {
             });
         }
 
-        const produto = await produtoModel.buscarProduto(id);
+        const produtos = await produtosModel.buscarProdutos(id);
 
-        if (produto.length === 0) {
+        if (produtos.length === 0) {
             return res.status(404).json({
                 mensagem: "Produto não encontrado."
             });
         }
 
-        await produtoModel.atualizarProduto(
+        await produtosModel.atualizarProdutos(
             id,
             nome.trim(),
             Number(preco),
@@ -269,7 +269,7 @@ async function atualizarProduto(req, res) {
     }
 }
 
-async function excluirProduto(req, res) {
+async function excluirProdutos(req, res) {
     try {
         const id = Number(req.params.id);
 
@@ -279,15 +279,15 @@ async function excluirProduto(req, res) {
             });
         }
 
-        const produto = await produtoModel.buscarProduto(id);
+        const produtos = await produtosModel.buscarProdutos(id);
 
-        if (produto.length === 0) {
+        if (produtos.length === 0) {
             return res.status(404).json({
                 mensagem: "Produto não encontrado."
             });
         }
 
-        await produtoModel.excluirProduto(id);
+        await produtosModel.excluirProdutos(id);
 
         return res.status(200).json({
             mensagem: "Produto excluído com sucesso!"
@@ -309,8 +309,8 @@ async function excluirProduto(req, res) {
 
 module.exports = {
     listarProdutos,
-    buscarProduto,
-    cadastrarProduto,
-    atualizarProduto,
-    excluirProduto
+    buscarProdutos,
+    cadastrarProdutos,
+    atualizarProdutos,
+    excluirProdutos
 };

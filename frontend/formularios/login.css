@@ -1,0 +1,147 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background-color: #f4f6f4;
+  color: #1b3620;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.navbar {
+  background-color: #163b1f;
+  padding: 16px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 3px solid #eab308;
+}
+
+.logo {
+  color: #eab308;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.nav-links a {
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+
+.nav-links a.ativo {
+  color: #eab308;
+  font-weight: 600;
+}
+
+.container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+.card-login {
+  background: #ffffff;
+  width: 100%;
+  max-width: 420px;
+  border-radius: 12px;
+  padding: 36px 32px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  border: 1px solid #e5ebe6;
+}
+
+.card-login h1 {
+  color: #163b1f;
+  font-size: 1.75rem;
+  text-align: center;
+  margin-bottom: 6px;
+}
+
+.subtitulo {
+  text-align: center;
+  color: #5a6b5d;
+  font-size: 0.9rem;
+  margin-bottom: 24px;
+}
+
+.campo {
+  margin-bottom: 18px;
+}
+
+.campo label {
+  display: block;
+  font-weight: 600;
+  color: #163b1f;
+  margin-bottom: 6px;
+  font-size: 0.95rem;
+}
+
+.campo input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #cbd5ce;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.campo input:focus {
+  border-color: #163b1f;
+}
+
+.btn-entrar {
+  width: 100%;
+  background-color: #eab308;
+  color: #163b1f;
+  border: none;
+  padding: 13px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 6px;
+  transition: background-color 0.2s ease;
+}
+
+.btn-entrar:hover {
+  background-color: #d9a406;
+}
+
+.link-cadastro {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 0.9rem;
+  color: #5a6b5d;
+}
+
+.link-cadastro a {
+  color: #163b1f;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.link-cadastro a:hover {
+  text-decoration: underline;
+}
+
+.footer {
+  background-color: #163b1f;
+  color: #ffffff;
+  text-align: center;
+  padding: 18px;
+  font-size: 0.9rem;
+}

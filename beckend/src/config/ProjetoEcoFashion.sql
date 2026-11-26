@@ -19,12 +19,12 @@ CREATE TABLE itens_carrinhos(
     quantidade INT NOT NULL,
     preco_unitario DECIMAL(10,2) NOT NULL,
     carrinho_id INT NOT NULL,
-    produto_id INT NOT NULL,
+    produtos_id INT NOT NULL,
 
     FOREIGN KEY (carrinho_id) REFERENCES carrinhos(id),
-    FOREIGN KEY (produto_id) REFERENCES produto(id),
+    FOREIGN KEY (produtos_id) REFERENCES produtos(id),
 
-    UNIQUE (carrinho_id, produto_id)
+    UNIQUE (carrinho_id, produtos_id)
 );
 
 CREATE TABLE pedidos(
@@ -42,10 +42,10 @@ CREATE TABLE itens_pedido(
     quantidade INT NOT NULL,
     preco_unitario DECIMAL(10,2) NOT NULL,
     pedido_id INT NOT NULL,
-    produto_id INT NOT NULL,
+    produtos_id INT NOT NULL,
 
     FOREIGN KEY (pedido_id) REFERENCES pedidos(id),
-    FOREIGN KEY (produto_id) REFERENCES produto(id)
+    FOREIGN KEY (produtos_id) REFERENCES produtos(id)
 );
 
 CREATE TABLE notas_fiscais(
@@ -60,3 +60,12 @@ CREATE TABLE notas_fiscais(
 );
 
 SHOW TABLES;
+CREATE TABLE IF NOT EXISTS clientes(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(100) NOT NULL,
+    email VARCHAR(150) NOT NULL UNIQUE,
+    senha VARCHAR(255) NOT NULL,
+    cpf VARCHAR(11) NOT NULL UNIQUE,
+    telefone VARCHAR(20),
+    endereco VARCHAR(255)
+);

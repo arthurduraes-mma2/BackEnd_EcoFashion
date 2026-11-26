@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EcoFashion | Carrinho</title>
+  <link rel="stylesheet" href="carrinho.css" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23163b1f'/><text x='50' y='72' font-size='65' text-anchor='middle' fill='%23eab308' font-family='sans-serif' font-weight='bold'>E</text></svg>" />
+</head>
+<body>
+  <header class="navbar">
+    <div class="logo">🌿 EcoFashion</div>
+    <nav class="nav-links">
+      <a href="../index.html">Início</a>
+      <a href="produtos.html">Produtos</a>
+      <a href="carrinho.html" class="ativo">Carrinho</a>
+      <a href="minhas-compras.html">Minhas compras</a>
+      <a href="../formularios/login.html">Entrar</a>
+      <button class="btn-sair" onclick="window.location.href='../formularios/login.html'">Sair</button>
+    </nav>
+  </header>
+
+  <main class="container">
+    <div class="card-carrinho">
+      <h1>Meu Carrinho</h1>
+      <div id="lista-itens"></div>
+
+      <div class="rodape-carrinho">
+        <div class="total-texto">Total: R$ <span id="preco-total">0,00</span></div>
+        <div class="acoes-rodape">
+          <a href="produtos.html" class="btn-continuar">Continuar comprando</a>
+          <button class="btn-finalizar" onclick="irParaPagamento()">Finalizar Compra</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    © 2026 EcoFashion — Moda sustentável para preservar o planeta.
+  </footer>
+
+  <script src="carrinho.js"></script>
+</body>
+</html>

@@ -84,14 +84,14 @@ async function buscarCarrinhoPorId(req, res) {
     }
 }
 
-async function adicionarProduto(req, res) {
+async function adicionarProdutos(req, res) {
     try {
         const id = Number(req.params.id);
-        const { produto_id, quantidade } = req.body;
+        const { produtos_id, quantidade } = req.body;
 
         if (
             !Number.isInteger(id) || id <= 0 ||
-            !Number.isInteger(produto_id) || produto_id <= 0 ||
+            !Number.isInteger(produtos_id) || produtos_id <= 0 ||
             !Number.isInteger(quantidade) || quantidade <= 0
         ) {
             return res.status(400).json({
@@ -101,7 +101,7 @@ async function adicionarProduto(req, res) {
 
         const resultado = await carrinhoModel.adicionarProduto(
             id,
-            produto_id,
+            produtos_id,
             quantidade
         );
 
@@ -111,7 +111,7 @@ async function adicionarProduto(req, res) {
         console.error(erro);
 
         return res.status(erro.statusCode || 500).json({
-            mensagem: erro.message || "Erro ao adicionar produto ao carrinho."
+            mensagem: erro.message || "Erro ao adicionar produtos ao carrinho."
         });
     }
 }
@@ -146,7 +146,7 @@ async function atualizarQuantidade(req, res) {
     }
 }
 
-async function removerProduto(req, res) {
+async function removerProdutos(req, res) {
     try {
         const id = Number(req.params.id);
 
@@ -156,7 +156,7 @@ async function removerProduto(req, res) {
             });
         }
 
-        const resultado = await carrinhoModel.removerProduto(id);
+        const resultado = await carrinhoModel.removerProdutos(id);
 
         if (resultado === 0) {
             return res.status(404).json({
@@ -165,14 +165,14 @@ async function removerProduto(req, res) {
         }
 
         return res.status(200).json({
-            mensagem: "Produto removido do carrinho com sucesso!"
+            mensagem: "Produtos removido do carrinho com sucesso!"
         });
 
     } catch (erro) {
         console.error(erro);
 
         return res.status(500).json({
-            mensagem: "Erro ao remover produto do carrinho."
+            mensagem: "Erro ao remover produtos do carrinho."
         });
     }
 }
@@ -206,8 +206,8 @@ module.exports = {
     criarCarrinho,
     buscarCarrinhoPorCliente,
     buscarCarrinhoPorId,
-    adicionarProduto,
+    adicionarProdutos,
     atualizarQuantidade,
-    removerProduto,
+    removerProdutos,
     limparCarrinho
 };
