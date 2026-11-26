@@ -346,6 +346,7 @@
       padding: 7px 0;
       font-size: 14px;
       border-bottom: 1px solid #e2e8f0;
+      gap: 12px;
     }
 
     .resumo-linha:last-child {
@@ -354,10 +355,12 @@
 
     .resumo-linha span {
       color: #64748b;
+      white-space: nowrap;
     }
 
     .resumo-linha strong {
       color: #163020;
+      text-align: right;
     }
 
     .btn-secundario {
@@ -413,7 +416,7 @@
         <h1>Finalizar Pedido</h1>
 
         <div class="total-box">
-          Total a pagar: <span id="valor-total">R$ 229,90</span>
+          Total a pagar: <span id="valor-total">R$ 0,00</span>
           <div id="desconto-info" class="desconto-info"></div>
         </div>
 
@@ -513,6 +516,10 @@
             <strong id="resumo-valor">R$ 0,00</strong>
           </div>
           <div class="resumo-linha">
+            <span>Entrega:</span>
+            <strong id="resumo-endereco">Endereço cadastrado</strong>
+          </div>
+          <div class="resumo-linha">
             <span>Status:</span>
             <strong id="resumo-status">-</strong>
           </div>
@@ -527,11 +534,17 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', function () {
-      let valorOriginal = 229.90;
+      // 1. Lê os itens reais salvos no carrinho e calcula o total
+      const carrinhoAtual = JSON.parse(localStorage.getItem('carrinho')) || [];
+      let valorOriginal = carrinhoAtual.reduce((soma, item) => {
+        return soma + (Number(item.preco) * Number(item.quantidade));
+      }, 0);
 
-      const totalSalvo = localStorage.getItem('totalCarrinho');
-      if (totalSalvo && !isNaN(parseFloat(totalSalvo))) {
-        valorOriginal = parseFloat(totalSalvo);
+      if (valorOriginal === 0) {
+        const totalSalvo = localStorage.getItem('totalCarrinho');
+        if (totalSalvo && !isNaN(parseFloat(totalSalvo))) {
+          valorOriginal = parseFloat(totalSalvo);
+        }
       }
 
       let totalPedido = valorOriginal;
@@ -600,7 +613,6 @@
         }
       }
 
-      // Evento ao trocar a opção no select
       selectPagamento.addEventListener('change', atualizarFormaPagamento);
 
       // Aplicar cupom de primeira compra
@@ -624,8 +636,14 @@
           return;
         }
 
-        const pedidosAnteriores = JSON.parse(localStorage.getItem('meusPedidos')) || [];
-        if (pedidosAnteriores.length > 0) {
+        const usuarioSalvo = localStorage.getItem('usuarioEcoFashion');
+        const usuario = usuarioSalvo ? JSON.parse(usuarioSalvo) : null;
+        const todasCompras = JSON.parse(localStorage.getItem('compras')) || [];
+        const comprasDoUsuario = usuario
+          ? todasCompras.filter(p => p.usuarioEmail === usuario.email)
+          : todasCompras;
+
+        if (comprasDoUsuario.length > 0) {
           feedback.className = 'feedback-cupom erro';
           feedback.textContent = 'Cupom indisponível: válido apenas para a sua primeira compra.';
           return;
@@ -692,6 +710,12 @@
         msgErro.style.display = 'none';
         const forma = selectPagamento.value;
 
+        if (carrinhoAtual.length === 0 && valorOriginal === 0) {
+          msgErro.textContent = 'Seu carrinho está vazio.';
+          msgErro.style.display = 'block';
+          return;
+        }
+
         if (forma === 'credito' || forma === 'debito') {
           const num = document.getElementById('num-cartao').value.replace(/\s/g, '');
           const nome = document.getElementById('nome-cartao').value.trim();
@@ -712,24 +736,47 @@
           boleto: 'Boleto Bancário'
         };
 
-        const idPedido = '#' + Math.floor(100000 + Math.random() * 900000);
+        const numeroPedido = Math.floor(100000 + Math.random() * 900000);
         const statusPedido = forma === 'boleto' ? 'Aguardando pagamento' : 'Aprovado';
 
-        const pedidosExistentes = JSON.parse(localStorage.getItem('meusPedidos')) || [];
-        pedidosExistentes.push({
-          id: idPedido,
+        const usuarioSalvo = localStorage.getItem('usuarioEcoFashion');
+        const usuario = usuarioSalvo ? JSON.parse(usuarioSalvo) : null;
+
+        // Busca o endereço salvo no cadastro do usuário logado
+        const enderecosSalvos = JSON.parse(localStorage.getItem('enderecosEcoFashion')) || {};
+        const enderecoEntrega = (usuario && usuario.email)
+          ? (enderecosSalvos[usuario.email.toLowerCase()] || null)
+          : null;
+
+        // Salva na chave 'compras' com o endereço vinculado
+        const comprasExistentes = JSON.parse(localStorage.getItem('compras')) || [];
+        comprasExistentes.unshift({
+          id: numeroPedido,
+          usuarioEmail: usuario ? usuario.email : 'visitante',
           data: new Date().toLocaleDateString('pt-BR'),
           total: totalPedido,
           cupom: cupomAplicado,
           pagamento: nomesForma[forma],
-          status: statusPedido
+          status: statusPedido,
+          endereco: enderecoEntrega,
+          itens: carrinhoAtual
         });
-        localStorage.setItem('meusPedidos', JSON.stringify(pedidosExistentes));
+        localStorage.setItem('compras', JSON.stringify(comprasExistentes));
 
-        document.getElementById('resumo-id').textContent = idPedido;
+        // Limpa o carrinho após finalizar a compra
+        localStorage.removeItem('carrinho');
+        localStorage.removeItem('totalCarrinho');
+
+        document.getElementById('resumo-id').textContent = '#' + numeroPedido;
         document.getElementById('resumo-forma').textContent = nomesForma[forma];
         document.getElementById('resumo-valor').textContent = formatarMoeda(totalPedido);
         document.getElementById('resumo-status').textContent = statusPedido;
+
+        if (enderecoEntrega && enderecoEntrega.rua) {
+          document.getElementById('resumo-endereco').textContent = `${enderecoEntrega.rua}, ${enderecoEntrega.numero} - ${enderecoEntrega.cidade}/${enderecoEntrega.estado}`;
+        } else {
+          document.getElementById('resumo-endereco').textContent = 'Não informado no cadastro';
+        }
 
         document.getElementById('etapa-pagamento').style.display = 'none';
         document.getElementById('etapa-confirmacao').style.display = 'block';

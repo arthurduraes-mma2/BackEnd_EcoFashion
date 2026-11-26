@@ -18,6 +18,16 @@ formCadastro.addEventListener("submit", async function (evento) {
   const email = document.getElementById("email").value.trim();
   const senha = document.getElementById("senha").value;
 
+  const endereco = {
+    cep: document.getElementById("cep").value.trim(),
+    rua: document.getElementById("rua").value.trim(),
+    numero: document.getElementById("numero").value.trim(),
+    complemento: document.getElementById("complemento").value.trim(),
+    bairro: document.getElementById("bairro").value.trim(),
+    cidade: document.getElementById("cidade").value.trim(),
+    estado: document.getElementById("estado").value.trim().toUpperCase()
+  };
+
   try {
     const resposta = await fetch(`${API_URL}/cadastros`, {
       method: "POST",
@@ -35,6 +45,11 @@ formCadastro.addEventListener("submit", async function (evento) {
     const dados = await resposta.json().catch(() => ({}));
 
     if (resposta.ok) {
+      // Salva o endereço vinculado ao e-mail do usuário para uso automático nas compras
+      const enderecosSalvos = JSON.parse(localStorage.getItem("enderecosEcoFashion")) || {};
+      enderecosSalvos[email.toLowerCase()] = { nome, ...endereco };
+      localStorage.setItem("enderecosEcoFashion", JSON.stringify(enderecosSalvos));
+
       exibirMensagem("Cadastro realizado com sucesso! Indo para o login...", "sucesso");
       setTimeout(() => {
         window.location.href = "login.html";

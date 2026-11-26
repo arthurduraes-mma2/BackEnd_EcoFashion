@@ -46,6 +46,38 @@ document.getElementById("btn-proximo")?.addEventListener("click", () => {
   atualizarSlide();
 });
 
+// Verifica se o usuário está logado e atualiza o menu
+function verificarLoginMenu() {
+  const usuarioSalvo = localStorage.getItem("usuarioEcoFashion");
+  const linkEntrar = document.querySelector('a[href="formularios/login.html"]');
+  const btnSair = document.getElementById("btn-sair");
+
+  if (usuarioSalvo) {
+    const usuario = JSON.parse(usuarioSalvo);
+    const nomeExibicao = usuario.nome || usuario.name || usuario.email.split("@")[0];
+
+    if (linkEntrar) {
+      linkEntrar.textContent = `Olá, ${nomeExibicao}`;
+      linkEntrar.href = "pages/minhas-compras.html";
+      linkEntrar.style.color = "#eab308";
+      linkEntrar.style.fontWeight = "bold";
+    }
+
+    if (btnSair) {
+      btnSair.style.display = "inline-block";
+      btnSair.addEventListener("click", () => {
+        localStorage.removeItem("usuarioEcoFashion");
+        localStorage.removeItem("tokenEcoFashion");
+        window.location.reload();
+      });
+    }
+  } else {
+    if (btnSair) {
+      btnSair.style.display = "none";
+    }
+  }
+}
+
 // Atualiza o contador de itens do carrinho no cabeçalho
 function atualizarContadorCarrinho() {
   const carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
@@ -90,6 +122,7 @@ async function carregarProdutosDestaque() {
   }
 }
 
+verificarLoginMenu();
 atualizarSlide();
 atualizarContadorCarrinho();
 carregarProdutosDestaque();
